@@ -238,6 +238,49 @@ body { background: var(--color-bg); color: var(--color-text); }
 
 .sheet-body { display: flex; flex-direction: column; gap: 1.25rem; }
 
+/* Tab navigation */
+.sheet-tabs {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 2px solid var(--color-border);
+  margin-bottom: -1.25rem; /* collapse gap so tab sits flush above content */
+}
+.sheet-tab {
+  padding: 0.5rem 1.25rem;
+  background: none;
+  border: 1px solid transparent;
+  border-bottom: none;
+  border-radius: var(--radius) var(--radius) 0 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-muted);
+  cursor: pointer;
+  transition: color 0.15s, background 0.15s;
+}
+.sheet-tab:hover { color: var(--color-text); background: var(--color-surface); }
+.sheet-tab.active {
+  color: var(--color-text);
+  background: var(--color-surface);
+  border-color: var(--color-border);
+  border-bottom-color: var(--color-surface);
+  position: relative;
+  bottom: -2px;
+}
+.sheet-tab-anomaly.active { color: var(--color-anomaly); border-top-color: var(--color-anomaly); }
+.sheet-tab-reality.active  { color: var(--color-reality);  border-top-color: var(--color-reality); }
+.sheet-tab-competency.active { color: var(--color-competency); border-top-color: var(--color-competency); }
+
+/* Empty state shown when a tab has no content */
+.tab-empty-state {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 2rem;
+  text-align: center;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
 .sheet-section {
   background: var(--color-surface);
   border: 1px solid var(--color-border);
@@ -684,6 +727,271 @@ body { background: var(--color-bg); color: var(--color-text); }
 }
 .relationship-form-card h3 { margin: 0 0 0.75rem; font-size: 0.9rem; color: var(--color-reality); }
 
+/* ── Requisitions Panel ────────────────────────────────────────── */
+.requisitions-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.requisitions-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.requisitions-panel-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-competency);
+  margin: 0;
+}
+
+.requisitions-empty {
+  color: var(--color-muted);
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+.requisitions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.requisition-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.requisition-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #fde8e8;
+  border-bottom: 1px solid #f0b0b0;
+}
+
+.requisition-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.requisition-divider {
+  width: 1px;
+  height: 1rem;
+  background: #f0b0b0;
+  flex-shrink: 0;
+}
+
+.requisition-page-code {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-competency);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.requisition-card-body {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.requisition-effect-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-competency);
+}
+
+.requisition-effect-text {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--color-text);
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+/* ── Requisitions Form ─────────────────────────────────────────── */
+.requisitions-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.requisitions-form-header h2 {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.requisitions-add-btn {
+  font-size: 0.8rem;
+  padding: 5px 12px;
+}
+
+.requisitions-empty-hint {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.requisition-form-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-competency);
+  border-radius: var(--radius);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.requisition-form-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.requisition-form-card-num {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.requisition-remove-btn {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+}
+
+/* ── Mechanics Read-only (form) ───────────────────────────────── */
+.mechanic-readonly-block {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 0.75rem;
+  background: var(--color-bg);
+  border-radius: var(--radius);
+  border: 1px solid var(--color-border);
+}
+.mechanic-readonly-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--color-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.mechanic-readonly-text {
+  font-size: 0.9rem;
+  color: var(--color-text);
+  line-height: 1.5;
+  margin: 0;
+}
+.mechanic-readonly-empty {
+  font-size: 0.875rem;
+  color: var(--color-muted);
+  margin: 0;
+}
+
+/* ── Self-Assessment ──────────────────────────────────────────── */
+.self-assessment-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+  background: #fde8e8;
+  border: 1px solid #f0b0b0;
+  border-radius: var(--radius);
+}
+.self-assessment-heading {
+  font-size: 0.9rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-competency);
+  margin: 0;
+}
+.self-assessment-subheading {
+  font-size: 0.8rem;
+  color: var(--color-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+.self-assessment-question {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.self-assessment-question-text {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+}
+.self-assessment-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.self-assessment-option-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+.self-assessment-option-btn:hover {
+  border-color: var(--color-competency);
+  background: #fff5f5;
+}
+.self-assessment-option-btn.selected {
+  border-color: var(--color-competency);
+  background: #fde8e8;
+}
+.self-assessment-option-text {
+  font-size: 0.875rem;
+  color: var(--color-text);
+  flex: 1;
+}
+.self-assessment-option-qa {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-competency);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.self-assessment-warning {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--color-competency);
+}
+
 /* ── Responsive ───────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .form-grid        { grid-template-columns: 1fr; }
@@ -692,4 +1000,5 @@ body { background: var(--color-bg); color: var(--color-text); }
   .qa-display-row   { grid-template-columns: 1fr; }
   .reality-mechanics { grid-template-columns: 1fr; }
   .relationship-grid { grid-template-columns: 1fr; }
+  .requisitions-grid { grid-template-columns: 1fr; }
 }

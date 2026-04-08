@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Character, QA_KEYS, QAKey, createDefaultReality, Relationship } from '../types/character';
+import { Character, QA_KEYS, QAKey, createDefaultReality, Relationship, Requisition, createDefaultRequisition, createDefaultCompetency } from '../types/character';
 import { ANOMALY_DEFINITIONS } from '../data/anomalies';
 import { REALITY_DEFINITIONS } from '../data/realities';
+import { COMPETENCY_DEFINITIONS } from '../data/competencies';
 
 interface Props {
   character: Character;
@@ -11,9 +12,14 @@ interface Props {
 
 export function CharacterForm({ character, onSave, onCancel }: Props) {
   const [form, setForm] = useState<Character>(character);
+  const [selfAssessmentAnswers, setSelfAssessmentAnswers] = useState<(number | null)[]>([null, null, null]);
 
   const selectedRealityDef = form.reality
     ? REALITY_DEFINITIONS.find((d) => d.id === form.reality!.realityId) ?? null
+    : null;
+
+  const selectedCompetencyDef = form.competency
+    ? COMPETENCY_DEFINITIONS.find((d) => d.id === form.competency!.competencyId) ?? null
     : null;
 
   function setField<K extends keyof Character>(key: K, value: Character[K]) {
@@ -30,14 +36,46 @@ export function CharacterForm({ character, onSave, onCancel }: Props) {
     }));
   }
 
-  function setSanctionedBehavior(index: 0 | 1 | 2, value: string) {
-    const updated: [string, string, string] = [...form.sanctionedBehaviors] as [string, string, string];
-    updated[index] = value;
-    setField('sanctionedBehaviors', updated);
+  function handleCompetencyChange(newId: string) {
+    const newDef = COMPETENCY_DEFINITIONS.find((d) => d.id === newId) ?? null;
+    const strippedReqs = (form.requisitions ?? []).filter((r) => !r.fromCompetencyId);
+    const newReqs: Requisition[] = newDef
+      ? [
+          {
+            name: newDef.initialRequisition.name,
+            pageCode: newDef.initialRequisition.pageCode,
+            effect: newDef.initialRequisition.effect,
+            fromCompetencyId: newDef.id,
+          },
+          ...strippedReqs,
+        ]
+      : strippedReqs;
+    setForm((prev) => ({
+      ...prev,
+      competency: newId ? createDefaultCompetency(newId) : null,
+      requisitions: newReqs,
+    }));
+    setSelfAssessmentAnswers([null, null, null]);
   }
 
   function handleCounter(key: 'commendations' | 'demerits' | 'additionalBurnout', delta: number) {
     setField(key, Math.max(0, form[key] + delta));
+  }
+
+  function setRequisition(index: number, patch: Partial<Requisition>) {
+    const updated = [...(form.requisitions ?? [])];
+    updated[index] = { ...updated[index], ...patch };
+    setField('requisitions', updated);
+  }
+
+  function addRequisition() {
+    setField('requisitions', [...(form.requisitions ?? []), createDefaultRequisition()]);
+  }
+
+  function removeRequisition(index: number) {
+    const updated = [...(form.requisitions ?? [])];
+    updated.splice(index, 1);
+    setField('requisitions', updated);
   }
 
   function setRelationship(index: 0 | 1 | 2, patch: Partial<Relationship>) {
@@ -49,13 +87,41 @@ export function CharacterForm({ character, onSave, onCancel }: Props) {
     setField('reality', { ...form.reality, relationships: updated });
   }
 
+  function handleSave() {
+    let savedForm = { ...form };
+    if (savedForm.competency && !savedForm.competency.selfAssessmentCompleted && selectedCompetencyDef) {
+      const allAnswered = selfAssessmentAnswers.every((a) => a !== null);
+      if (allAnswered) {
+        const chosenKeys = new Set(
+          selectedCompetencyDef.selfAssessment.map((q, qi) => q.options[selfAssessmentAnswers[qi]!].qaKey)
+        );
+        const updatedQA = { ...savedForm.qualityAssurances };
+        QA_KEYS.forEach((key) => {
+          updatedQA[key] = { ...updatedQA[key], current: chosenKeys.has(key) ? 3 : 0 };
+        });
+        savedForm = {
+          ...savedForm,
+          qualityAssurances: updatedQA,
+          competency: { ...savedForm.competency, selfAssessmentCompleted: true },
+        };
+      }
+    }
+    onSave(savedForm);
+  }
+
   return (
     <div className="form-page">
       <div className="form-header">
         <h1>{character.name ? `Edit: ${character.name}` : 'New Character'}</h1>
         <div className="form-header-actions">
           <button className="btn btn-secondary" onClick={onCancel}>Cancel</button>
-          <button className="btn btn-primary" onClick={() => onSave(form)}>Save</button>
+          {selectedCompetencyDef && form.competency && !form.competency.selfAssessmentCompleted &&
+            selfAssessmentAnswers.some((a) => a === null) && (
+            <span className="self-assessment-warning">
+              Answer all Self-Assessment questions to apply QA bonuses
+            </span>
+          )}
+          <button className="btn btn-primary" onClick={handleSave}>Save</button>
         </div>
       </div>
 
@@ -136,11 +202,15 @@ export function CharacterForm({ character, onSave, onCancel }: Props) {
             </label>
             <label>
               Competency
-              <input
-                type="text"
-                value={form.competency}
-                onChange={(e) => setField('competency', e.target.value)}
-              />
+              <select
+                value={form.competency?.competencyId ?? ''}
+                onChange={(e) => handleCompetencyChange(e.target.value)}
+              >
+                <option value="">— None —</option>
+                {COMPETENCY_DEFINITIONS.map((def) => (
+                  <option key={def.id} value={def.id}>{def.name}</option>
+                ))}
+              </select>
             </label>
           </div>
         </section>
@@ -166,28 +236,116 @@ export function CharacterForm({ character, onSave, onCancel }: Props) {
         <section className="form-section">
           <h2>Mechanics</h2>
 
-          <label>
-            Prime Directive
-            <textarea
-              rows={3}
-              value={form.primeDirective}
-              onChange={(e) => setField('primeDirective', e.target.value)}
-            />
-          </label>
+          <div className="mechanic-readonly-block">
+            <span className="mechanic-readonly-label">Prime Directive</span>
+            {selectedCompetencyDef
+              ? <p className="mechanic-readonly-text">{selectedCompetencyDef.primeDirective}</p>
+              : <p className="mechanic-readonly-empty"><em>Select a Competency above to see your Prime Directive.</em></p>
+            }
+          </div>
 
-          <div className="sanctioned-behaviors-field">
-            <label className="sanctioned-behaviors-label">Sanctioned Behaviors</label>
-            {([0, 1, 2] as const).map((i) => (
-              <label key={i}>
-                Behavior {i + 1}
-                <input
-                  type="text"
-                  value={form.sanctionedBehaviors[i]}
-                  onChange={(e) => setSanctionedBehavior(i, e.target.value)}
+          <div className="mechanic-readonly-block">
+            <span className="mechanic-readonly-label">Sanctioned Behaviors</span>
+            {selectedCompetencyDef
+              ? (
+                <ol className="sanctioned-list">
+                  {selectedCompetencyDef.sanctionedBehaviors.map((b, i) => (
+                    <li key={i}>{b}</li>
+                  ))}
+                </ol>
+              )
+              : <p className="mechanic-readonly-empty"><em>Select a Competency above to see your Sanctioned Behaviors.</em></p>
+            }
+          </div>
+
+          {selectedCompetencyDef && form.competency && !form.competency.selfAssessmentCompleted && (
+            <div className="self-assessment-section">
+              <h3 className="self-assessment-heading">Self-Assessment</h3>
+              <p className="self-assessment-subheading">
+                Answer all three questions. Each answer grants +3 to a Quality Assurance max and will be applied when you save.
+              </p>
+              {selectedCompetencyDef.selfAssessment.map((q, qIndex) => (
+                <div key={qIndex} className="self-assessment-question">
+                  <p className="self-assessment-question-text">
+                    {qIndex + 1}. {q.question}
+                  </p>
+                  <div className="self-assessment-options">
+                    {q.options.map((opt, oIndex) => (
+                      <button
+                        key={oIndex}
+                        type="button"
+                        className={`self-assessment-option-btn${selfAssessmentAnswers[qIndex] === oIndex ? ' selected' : ''}`}
+                        onClick={() => {
+                          const updated = [...selfAssessmentAnswers];
+                          updated[qIndex] = selfAssessmentAnswers[qIndex] === oIndex ? null : oIndex;
+                          setSelfAssessmentAnswers(updated);
+                        }}
+                      >
+                        <span className="self-assessment-option-text">{opt.text}</span>
+                        <span className="self-assessment-option-qa">+3 {opt.qaKey.charAt(0).toUpperCase() + opt.qaKey.slice(1)}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
+
+        {/* Requisitions */}
+        <section className="form-section">
+          <div className="requisitions-form-header">
+            <h2>Requisitions</h2>
+            <button type="button" className="btn btn-secondary requisitions-add-btn" onClick={addRequisition}>
+              + Add Requisition
+            </button>
+          </div>
+
+          {(form.requisitions ?? []).length === 0 && (
+            <p className="requisitions-empty-hint">No requisitions yet. Click "Add Requisition" to begin.</p>
+          )}
+
+          {(form.requisitions ?? []).map((req, i) => (
+            <div key={i} className="requisition-form-card">
+              <div className="requisition-form-card-header">
+                <span className="requisition-form-card-num">#{i + 1}</span>
+                <button
+                  type="button"
+                  className="btn btn-danger requisition-remove-btn"
+                  onClick={() => removeRequisition(i)}
+                  aria-label={`Remove requisition ${i + 1}`}
+                >
+                  Remove
+                </button>
+              </div>
+              <div className="form-grid">
+                <label>
+                  Name
+                  <input
+                    type="text"
+                    value={req.name}
+                    onChange={(e) => setRequisition(i, { name: e.target.value })}
+                  />
+                </label>
+                <label>
+                  Page / PD Code
+                  <input
+                    type="text"
+                    value={req.pageCode}
+                    onChange={(e) => setRequisition(i, { pageCode: e.target.value })}
+                  />
+                </label>
+              </div>
+              <label>
+                Effect
+                <textarea
+                  rows={4}
+                  value={req.effect}
+                  onChange={(e) => setRequisition(i, { effect: e.target.value })}
                 />
               </label>
-            ))}
-          </div>
+            </div>
+          ))}
         </section>
 
         {/* Relationships (only when Reality is selected) */}
@@ -262,39 +420,6 @@ export function CharacterForm({ character, onSave, onCancel }: Props) {
             })}
           </section>
         )}
-
-        {/* Quality Assurances */}
-        <section className="form-section">
-          <h2>Quality Assurances</h2>
-          <div className="qa-grid">
-            {QA_KEYS.map((key) => (
-              <div key={key} className="qa-row">
-                <span className="qa-label">
-                  {key.charAt(0).toUpperCase() + key.slice(1)}
-                </span>
-                <label className="qa-input-label">
-                  Current
-                  <input
-                    type="number"
-                    min={0}
-                    value={form.qualityAssurances[key].current}
-                    onChange={(e) => setQA(key, 'current', parseInt(e.target.value) || 0)}
-                  />
-                </label>
-                <label className="qa-input-label">
-                  Max
-                  <input
-                    type="number"
-                    min={0}
-                    value={form.qualityAssurances[key].max}
-                    onChange={(e) => setQA(key, 'max', parseInt(e.target.value) || 0)}
-                  />
-                </label>
-              </div>
-            ))}
-          </div>
-        </section>
-
       </div>
     </div>
   );

@@ -3,10 +3,20 @@ import { Character, createDefaultCharacter } from '../types/character';
 
 const STORAGE_KEY = 'ta-characters';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function migrateCharacter(c: any): Character {
+  if (typeof c.competency === 'string') {
+    c.competency = null;
+  }
+  delete c.primeDirective;
+  delete c.sanctionedBehaviors;
+  return c as Character;
+}
+
 function loadFromStorage(): Character[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as Character[]) : [];
+    return raw ? (JSON.parse(raw) as Character[]).map(migrateCharacter) : [];
   } catch {
     return [];
   }

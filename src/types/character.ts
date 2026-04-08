@@ -25,6 +25,22 @@ export interface Relationship {
   active: boolean;
 }
 
+export interface CharacterCompetency {
+  competencyId: string;
+  selfAssessmentCompleted: boolean;
+}
+
+export function createDefaultCompetency(competencyId: string): CharacterCompetency {
+  return { competencyId, selfAssessmentCompleted: false };
+}
+
+export interface Requisition {
+  name: string;
+  pageCode: string; // "Page/PD Code" from the sheet
+  effect: string;   // multi-line free text
+  fromCompetencyId?: string; // marks the auto-inserted initial requisition
+}
+
 export interface CharacterReality {
   realityId: string;
   burnoutRelease: { activated: boolean };
@@ -42,14 +58,12 @@ export interface Character {
   // ARC stats
   anomaly: CharacterAnomaly | null;
   reality: CharacterReality | null;
-  competency: string;
+  competency: CharacterCompetency | null;
+  requisitions: Requisition[];
   // Counters
   commendations: number;
   demerits: number;
   additionalBurnout: number;
-  // Mechanics
-  primeDirective: string;
-  sanctionedBehaviors: [string, string, string];
   // Quality Assurances
   qualityAssurances: {
     attentiveness: QualityAssurance;
@@ -78,6 +92,10 @@ export const QA_KEYS = [
 
 export type QAKey = (typeof QA_KEYS)[number];
 
+export function createDefaultRequisition(): Requisition {
+  return { name: '', pageCode: '', effect: '' };
+}
+
 const defaultRelationship: Relationship = {
   name: '',
   playedBy: '',
@@ -95,22 +113,21 @@ export function createDefaultCharacter(): Omit<Character, 'id'> {
     agencyStanding: '',
     anomaly: null,
     reality: null,
-    competency: '',
+    competency: null,
+    requisitions: [],
     commendations: 0,
     demerits: 0,
     additionalBurnout: 0,
-    primeDirective: '',
-    sanctionedBehaviors: ['', '', ''],
     qualityAssurances: {
-      attentiveness: { current: 0, max: 0 },
-      duplicity: { current: 0, max: 0 },
-      dynamism: { current: 0, max: 0 },
-      empathy: { current: 0, max: 0 },
-      initiative: { current: 0, max: 0 },
-      persistence: { current: 0, max: 0 },
-      presence: { current: 0, max: 0 },
-      professionalism: { current: 0, max: 0 },
-      subtlety: { current: 0, max: 0 },
+      attentiveness: { current: 0, max: 9 },
+      duplicity: { current: 0, max: 9 },
+      dynamism: { current: 0, max: 9 },
+      empathy: { current: 0, max: 9 },
+      initiative: { current: 0, max: 9 },
+      persistence: { current: 0, max: 9 },
+      presence: { current: 0, max: 9 },
+      professionalism: { current: 0, max: 9 },
+      subtlety: { current: 0, max: 9 },
     },
   };
 }
