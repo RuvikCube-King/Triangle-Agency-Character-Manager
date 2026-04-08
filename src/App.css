@@ -403,9 +403,30 @@ body { background: var(--color-bg); color: var(--color-text); }
 }
 .ability-header {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 0.5rem;
+}
+.ability-practiced-label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  cursor: pointer;
+  user-select: none;
+}
+.ability-practiced-label:has(.ability-practiced-checkbox:checked) {
+  color: var(--color-anomaly);
+}
+.ability-practiced-checkbox {
+  accent-color: var(--color-anomaly);
+  width: 0.85rem;
+  height: 0.85rem;
+  cursor: pointer;
 }
 .ability-name { font-size: 1rem; font-weight: 800; }
 .ability-roll-stat {

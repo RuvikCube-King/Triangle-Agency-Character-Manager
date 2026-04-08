@@ -1,5 +1,5 @@
 import { AnomalyDefinition } from '../types/anomaly';
-import { AnswerCheckboxes, CharacterAnomaly } from '../types/character';
+import { AbilityProgress, AnswerCheckboxes, CharacterAnomaly } from '../types/character';
 
 interface Props {
   anomaly: CharacterAnomaly;
@@ -20,18 +20,35 @@ const OUTCOME_CLASSES: Record<string, string> = {
 };
 
 export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly }: Props) {
-  function toggleCheckbox(abilityName: string, answerIndex: 0 | 1, boxIndex: number) {
+  function getProgress(abilityName: string): AbilityProgress {
     const existing = anomaly.personalizationProgress[abilityName];
     const defaultBoxes: AnswerCheckboxes = [false, false, false];
-    const pair: [AnswerCheckboxes, AnswerCheckboxes] = existing
-      ? [[...existing[0]] as AnswerCheckboxes, [...existing[1]] as AnswerCheckboxes]
-      : [defaultBoxes, [...defaultBoxes] as AnswerCheckboxes];
-    pair[answerIndex][boxIndex] = !pair[answerIndex][boxIndex];
+    return existing ?? { practiced: false, answers: [defaultBoxes, [...defaultBoxes] as AnswerCheckboxes] };
+  }
+
+  function togglePracticed(abilityName: string) {
+    const existing = getProgress(abilityName);
     onUpdateAnomaly({
       ...anomaly,
       personalizationProgress: {
         ...anomaly.personalizationProgress,
-        [abilityName]: pair,
+        [abilityName]: { ...existing, practiced: !existing.practiced },
+      },
+    });
+  }
+
+  function toggleCheckbox(abilityName: string, answerIndex: 0 | 1, boxIndex: number) {
+    const existing = getProgress(abilityName);
+    const answers: [AnswerCheckboxes, AnswerCheckboxes] = [
+      [...existing.answers[0]] as AnswerCheckboxes,
+      [...existing.answers[1]] as AnswerCheckboxes,
+    ];
+    answers[answerIndex][boxIndex] = !answers[answerIndex][boxIndex];
+    onUpdateAnomaly({
+      ...anomaly,
+      personalizationProgress: {
+        ...anomaly.personalizationProgress,
+        [abilityName]: { ...existing, answers },
       },
     });
   }
@@ -41,10 +58,19 @@ export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly }: Props) {
       <h2 className="anomaly-panel-title">{definition.name}</h2>
       <div className="ability-list">
         {definition.abilities.map((ability) => {
-          const progress = anomaly.personalizationProgress[ability.name];
+          const progress = getProgress(ability.name);
           return (
             <div key={ability.name} className="ability-card">
               <div className="ability-header">
+                <label className="ability-practiced-label">
+                  <input
+                    type="checkbox"
+                    className="ability-practiced-checkbox"
+                    checked={progress.practiced}
+                    onChange={() => togglePracticed(ability.name)}
+                  />
+                  Practiced
+                </label>
                 <h3 className="ability-name">{ability.name}</h3>
                 <span className="ability-roll-stat">Roll {ability.rollStat.charAt(0).toUpperCase() + ability.rollStat.slice(1)}</span>
               </div>
@@ -69,7 +95,7 @@ export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly }: Props) {
               <div className="personalization-box">
                 <p className="personalization-question">{ability.personalization.question}</p>
                 {ability.personalization.answers.map((answer, answerIndex) => {
-                  const checkboxes: AnswerCheckboxes = progress?.[answerIndex as 0 | 1] ?? [false, false, false];
+                  const checkboxes: AnswerCheckboxes = progress.answers[answerIndex as 0 | 1];
                   return (
                     <div key={answerIndex} className="personalization-answer">
                       <span className="personalization-answer-text">{answer.text}</span>

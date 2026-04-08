@@ -5,10 +5,15 @@ export interface QualityAssurance {
 
 export type AnswerCheckboxes = [boolean, boolean, boolean];
 
+export interface AbilityProgress {
+  practiced: boolean;
+  answers: [AnswerCheckboxes, AnswerCheckboxes];
+}
+
 export interface CharacterAnomaly {
   anomalyId: string;
-  // keyed by ability name; each entry stores checkbox states for both answers independently
-  personalizationProgress: Partial<Record<string, [AnswerCheckboxes, AnswerCheckboxes]>>;
+  // keyed by ability name
+  personalizationProgress: Partial<Record<string, AbilityProgress>>;
 }
 
 export interface Relationship {
