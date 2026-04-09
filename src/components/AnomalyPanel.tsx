@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { AnomalyDefinition } from '../types/anomaly';
 import { AbilityProgress, AnswerCheckboxes, CharacterAnomaly } from '../types/character';
+import { DiceRollResult, rollDicePool } from '../utils/rollDice';
 
 interface Props {
   anomaly: CharacterAnomaly;
   definition: AnomalyDefinition;
   onUpdateAnomaly: (updated: CharacterAnomaly) => void;
+  burnout: number;
 }
 
 const OUTCOME_ICONS: Record<string, string> = {
@@ -19,7 +22,8 @@ const OUTCOME_CLASSES: Record<string, string> = {
   failure: 'outcome-failure',
 };
 
-export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly }: Props) {
+export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly, burnout }: Props) {
+  const [rollResults, setRollResults] = useState<Partial<Record<string, DiceRollResult>>>({});
   function getProgress(abilityName: string): AbilityProgress {
     const existing = anomaly.personalizationProgress[abilityName];
     const defaultBoxes: AnswerCheckboxes = [false, false, false];
@@ -72,7 +76,16 @@ export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly }: Props) {
                   Practiced
                 </label>
                 <h3 className="ability-name">{ability.name}</h3>
-                <span className="ability-roll-stat">Roll {ability.rollStat.charAt(0).toUpperCase() + ability.rollStat.slice(1)}</span>
+                <button
+                  type="button"
+                  className="ability-roll-stat"
+                  onClick={() => {
+                    const result = rollDicePool(burnout, ability.tieredMode);
+                    setRollResults((prev) => ({ ...prev, [ability.name]: result }));
+                  }}
+                >
+                  Roll {ability.rollStat.charAt(0).toUpperCase() + ability.rollStat.slice(1)}
+                </button>
               </div>
               <p className="ability-description">{ability.description}</p>
 
@@ -91,6 +104,43 @@ export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly }: Props) {
                   </div>
                 ))}
               </div>
+
+              {rollResults[ability.name] && (() => {
+                const r = rollResults[ability.name]!;
+                const burnedSet = new Set(r.burnedIndices);
+                return (
+                  <div className="ability-roll-result">
+                    <button
+                      type="button"
+                      className="roll-result-clear"
+                      onClick={() => setRollResults((prev) => { const n = { ...prev }; delete n[ability.name]; return n; })}
+                      aria-label="Clear roll result"
+                    >×</button>
+                    <div className="roll-result-dice">
+                      {r.dice.map((face, i) => (
+                        <span
+                          key={i}
+                          className={`die-face${face === 3 && !burnedSet.has(i) ? ' die-face--hit' : ''}${burnedSet.has(i) ? ' die-face--burned' : ''}`}
+                        >
+                          {face}
+                        </span>
+                      ))}
+                    </div>
+                    <div className="roll-result-summary">
+                      <span className={`roll-result-tier roll-result-tier--${r.tier}`}>
+                        {r.tier === 'success' ? '▲ Success' : r.tier === 'tiered' ? '★ Tiered' : '✕ Failure'}
+                      </span>
+                      <span className="roll-result-detail">
+                        {r.effectiveThrees === 0
+                          ? r.burnedIndices.length > 0 ? `${r.burnedIndices.length} burned` : 'No threes'
+                          : r.tier === 'tiered'
+                          ? `${r.effectiveThrees} three${r.effectiveThrees !== 1 ? 's' : ''} — ${r.tieredStacks} stack${r.tieredStacks !== 1 ? 's' : ''}`
+                          : `${r.effectiveThrees} three${r.effectiveThrees !== 1 ? 's' : ''}`}
+                      </span>
+                    </div>
+                  </div>
+                );
+              })()}
 
               <div className="personalization-box">
                 <p className="personalization-question">{ability.personalization.question}</p>

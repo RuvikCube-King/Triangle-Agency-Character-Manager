@@ -71,6 +71,7 @@ export const ANOMALY_DEFINITIONS: AnomalyDefinition[] = [
             { text: 'Are completely unexpected.', code: 'S1' },
           ],
         },
+        tieredMode: 'per-extra',
       },
       {
         name: 'Site Visit',

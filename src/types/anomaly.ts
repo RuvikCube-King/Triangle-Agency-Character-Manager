@@ -12,6 +12,8 @@ export interface PersonalizationPrompt {
 
 export type OutcomeTrigger = 'success' | 'tiered' | 'failure';
 
+export type TieredMode = 'per-three' | 'per-extra';
+
 export interface Outcome {
   trigger: OutcomeTrigger;
   triggerLabel: string;  // "On a success", "On every third 3", "On a failure"
@@ -25,6 +27,7 @@ export interface AbilityDefinition {
   rollStat: QAKey;
   outcomes: Outcome[];
   personalization: PersonalizationPrompt;
+  tieredMode?: TieredMode;  // defaults to 'per-three' if absent
 }
 
 export interface AnomalyDefinition {

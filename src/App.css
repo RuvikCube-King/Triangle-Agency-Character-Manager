@@ -483,7 +483,9 @@ body { background: var(--color-bg); color: var(--color-text); }
   border-radius: 999px;
   padding: 2px 10px;
   white-space: nowrap;
+  cursor: pointer;
 }
+.ability-roll-stat:hover { opacity: 0.75; }
 .ability-description { font-size: 0.875rem; color: var(--color-muted); line-height: 1.5; }
 
 .ability-outcomes { display: flex; flex-direction: column; gap: 0.4rem; }
@@ -991,6 +993,72 @@ body { background: var(--color-bg); color: var(--color-text); }
   font-style: italic;
   color: var(--color-competency);
 }
+
+/* ── Dice Roll Result ─────────────────────────────────────────── */
+.ability-roll-result {
+  position: relative;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  margin-top: 0.75rem;
+}
+.roll-result-clear {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  background: none;
+  border: none;
+  color: var(--color-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 0.25rem;
+}
+.roll-result-clear:hover { color: var(--color-text); }
+.roll-result-dice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+.die-face {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  font-size: 0.95rem;
+  font-weight: 700;
+  font-family: monospace;
+  color: var(--color-muted);
+  background: var(--color-surface);
+}
+.die-face--hit {
+  background: var(--color-anomaly);
+  border-color: var(--color-anomaly);
+  color: #fff;
+}
+.die-face--burned {
+  background: var(--color-surface);
+  border-color: var(--color-competency);
+  color: var(--color-competency);
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+.roll-result-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+.roll-result-tier { font-weight: 700; }
+.roll-result-tier--success { color: var(--color-anomaly); }
+.roll-result-tier--tiered  { color: var(--color-reality); }
+.roll-result-tier--failure { color: var(--color-competency); }
+.roll-result-detail { color: var(--color-muted); font-size: 0.85rem; }
 
 /* ── Responsive ───────────────────────────────────────────────── */
 @media (max-width: 640px) {

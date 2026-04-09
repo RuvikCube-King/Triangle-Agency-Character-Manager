@@ -254,6 +254,7 @@ export function CharacterSheet({ character, onEdit, onBack, onUpdateCharacter }:
                 anomaly={character.anomaly}
                 definition={anomalyDefinition}
                 onUpdateAnomaly={handleUpdateAnomaly}
+                burnout={character.additionalBurnout}
               />
             )
             : (
