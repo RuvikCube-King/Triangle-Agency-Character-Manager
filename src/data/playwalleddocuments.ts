@@ -103,7 +103,7 @@ export const PLAYWALLED_DOCUMENTS: PlaywalledDocument[] = [
   {
     code: 'A6',
     title: "Achilles' Heel",
-    track: 'competency',
+    track: 'anomaly',
     sections: [
       {
         type: 'paragraphs',
@@ -137,7 +137,7 @@ export const PLAYWALLED_DOCUMENTS: PlaywalledDocument[] = [
   {
     code: 'A7',
     title: 'Unemployed',
-    track: 'anomaly',
+    track: 'competency',
     sections: [
       {
         type: 'paragraphs',
@@ -195,7 +195,7 @@ export const PLAYWALLED_DOCUMENTS: PlaywalledDocument[] = [
   {
     code: 'A9',
     title: 'All-in-One',
-    track: 'competency',
+    track: 'anomaly',
     sections: [
       {
         type: 'paragraphs',
@@ -203,6 +203,16 @@ export const PLAYWALLED_DOCUMENTS: PlaywalledDocument[] = [
           "Select a favorite object to imbue with ultimate convenience. The object retains its original appearance (pen, crowbar, lightbulb) but it becomes the All-in-One, an object capable of anything.",
           "Any time you attempt to use it to solve a problem solvable by any mundane tool, gadget, or device, it works. Typically, the All-in-One performs one simple mundane function at a time.",
           "When you first create it, the All-in-One can also function as the following:"
+        ],
+      },
+      {
+        type: 'list',
+        items: [
+          'Shelter from the Elements',
+          'Vehicle for two (speed of a horse)',
+          'Textile factory (prints any mundane textile, one meter per minute)',
+          'Meditation Guide',
+          'Art & Artifact Appraiser',
         ],
       },
       {
@@ -309,6 +319,149 @@ export const PLAYWALLED_DOCUMENTS: PlaywalledDocument[] = [
             { text: 'An intimate conversation.', code: 'B8' },
           ],
         },
+      },
+    ],
+  },
+  {
+    code: 'B1',
+    title: 'Bad Optics',
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'paragraphs',
+        text: [
+          "You may now use Forced Perspective directly on living targets. You may also use Forced Perspective to strike or manipulate living targets without moving them as if they are the size you perceive them. (Meaning a single punch will land on a faraway target as if dealt by a giant.)",
+        ],
+      },
+      {
+        type: 'ability',
+        rollStat: 'dynamism',
+        setup: 'When used this way, roll Dynamism instead of Attentiveness and add the following text:',
+        outcomes: [
+          {
+            trigger: 'tiered',
+            triggerLabel: 'For each additional 3, ',
+            description: 'you may target an additional person with an attack of this type.', 
+          },
+          {
+            trigger: 'failure',
+            triggerLabel: 'On a failure,',
+            description: 'until the next day, you shrink or grow to the size that matches the target’s perspective of you at the time of your attack.',
+          },
+        ],
+        tieredMode: 'per-three',
+      },
+    ],
+  },
+  {
+    code: 'B2',
+    title: 'Been There, Done That',
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'paragraphs',
+        text: [
+          "Smooth over the problems of today with a little extra work later. You begin each mission with 3 Time Beacons, and may place them at any time while in the field.",
+          "Placing a Time Beacon allows you to mark a spot for your future self to return and interfere. After the mission, you’ll return to these spots to help out – which means whenever you place one, the future version of you appears shortly afterwards/prior to change something in a simple way that doesn’t cause a serious paradox.",
+          "Choose one of the following effects each time you activate a Time Beacon:"
+        ],
+      },
+      {
+        type: 'list',
+        items: [
+          "An object that would take time to find is found immediately.",
+          "An object that would be useful for an adversary to have has conveniently disappeared the moment they attempt to produce it.",
+          "A distraction occurs just out of sight.",
+          "One of your Anomaly Abilities is activated somewhere nearby without you having to do it. (This still requires rolls, costs QAs, and creates Chaos as normal.) In the event of a failure or other consequences, your future self will have to deal with it.",
+          "An instance of Harm is taken by your future self, instead of somebody present (Added back at the end of the mission. May cause Death.)",
+          "Someone was prepared for your arrival with information, intimidation, or charm.",
+          "Somebody or something that intended to surprise you is, instead, themselves surprised.",
+        ]
+      },
+      {
+        type: 'paragraphs',
+        text: [
+          "You cannot place a Time Beacon if you are dead or otherwise incapacitated.",
+          "If you are unable to return to a placed Time Beacon for some reason, the resulting paradox causes severe damage to Reality: immediately add 11 Loose Ends to your Branch’s total.",
+        ]
+      }
+    ],
+  },
+  {
+    code: 'B3',
+    title: 'Beg',
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'paragraphs',
+        text: [
+          "Haven’t they read the stories?",
+          "If you ask someone politely for any kind of help and they deny it, you may activate the “On a success” effect of Borrow and the “On six or more 3s” effect of Steal, all without rolling.",
+          "If you want additional 3s to activate other effects from Borrow, roll Subtlety and spend any 3s generated by the roll. This roll cannot fail, but it does create Chaos as normal.",
+        ],
+      },
+      {
+        type: 'ability',
+        rollStat: 'subtlety',
+        setup: 'Roll Subtlety and spend any 3s generated by the roll. This roll cannot fail, but it does create Chaos as normal.',
+        outcomes: [
+        ],
+      },
+    ],
+  },
+  {
+    code: 'B4',
+    title: 'Big Hand',
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'ability',
+        rollStat: 'dynamism',
+        setup: 'You create and can now wield a powerful artifact: Big Hand. Big Hand is a long, elegant, sword-like weapon that deals no Harm. It can be activated by hitting a target or by tapping it against any clock. When you wield Big Hand alone, roll Dynamism.',
+        outcomes: [
+          {
+            trigger: 'success',
+            triggerLabel: 'On a success,',
+            description: 'the target is hit with Big Hand. They experience the last thing that Harmed them again, receiving an equal amount of Harm. Tapped clocks ignore this effect.',
+          },
+          {
+            trigger: 'triscendence',
+            triggerLabel: 'On Triscendence, ',
+            description: 'you can experience the next 60 seconds in any order. You may bring any objects or people you can hold with you as you travel between seconds in this way.', 
+          },
+          {
+            trigger: 'tiered',
+            triggerLabel: 'For each additional 3, ',
+            description: 'you may choose one of the following:',
+            options: [
+              "Time advances by one minute.",
+              "Time rewinds by one minute.",
+              "A nearby target hears a distracting “tick tock” sound in their mind that prevents them from focusing on any complex plan, math, or speech for the next minute.",
+              "A nearby timer advances to its end and the task it was applied to completes. (The toast pops out, a parking meter hits its limit, etc.)",
+            ] 
+          },
+          {
+            trigger: 'failure',
+            triggerLabel: 'On a failure,',
+            description: 'the next thing that Harms you does so twice, for double the Harm.',
+          },
+        ],
+        tieredMode: 'per-extra',
+      }
+    ]
+  },
+  {
+    code: "B5",
+    title: "Binding Vow",
+    track: "anomaly",
+    sections: [
+      {
+        type: 'paragraphs',
+        text: [
+          "In your presence, words carry a great weight. From now on, whenever you accept a promise from someone else or make a promise yourself, you can choose to make it a Binding Vow. Breaking a promise, or failing to fulfill it before it becomes impossible, will cause the person who made it to die immediately in a way that appears mundane.",
+          "If all parties agree, the consequences of breaking the vow may include things other than immediate death (such as binding compulsions or great deals of debt). Any substitute consequences must be agreed upon before the promise becomes a Binding Vow.",
+          "Even for the most skeptical, an approaching Binding Vow carries a deep feeling of weight and truth. Anyone who makes one will understand that what they said carries stakes.",
+        ],
       },
     ],
   },
