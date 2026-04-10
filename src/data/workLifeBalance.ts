@@ -4,6 +4,7 @@
 // NOTE: Code positions are approximate and should be verified against the physical sheet.
 
 import { TrackName } from '../types/workLifeBalance';
+import { PLAYWALLED_DOCUMENTS } from './playwalleddocuments';
 
 export interface WLBBoxMeta {
   code?: string;
@@ -12,7 +13,7 @@ export interface WLBBoxMeta {
 export type TrackMeta = Partial<Record<number, WLBBoxMeta>>;
 
 export const COMPETENCY_BOX_META: TrackMeta = {
-   2: { code: 'A8' },
+   2: { code: 'A3' },
    5: { code: 'D4' },
    8: { code: 'G3' },
   11: { code: 'J3' },
@@ -59,7 +60,7 @@ export function getCodeTrack(code: string): TrackName | null {
       return track as TrackName;
     }
   }
-  return null;
+  return PLAYWALLED_DOCUMENTS.find(d => d.code === code)?.track ?? null;
 }
 
 export interface RankSpan {

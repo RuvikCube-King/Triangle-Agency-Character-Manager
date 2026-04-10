@@ -1,7 +1,7 @@
 import './AnomalyPanel.css';
 import { useState } from 'react';
 import { AnomalyDefinition, TieredMode } from '../types/anomaly';
-import { AbilityProgress, AnswerCheckboxes, CharacterAnomaly, Character } from '../types/character';
+import { AbilityProgress, AnswerCheckboxes, CharacterAnomaly, Character, OutcomeAddition } from '../types/character';
 import { DiceRollResult, rollDicePool, calcChaos } from '../utils/rollDice';
 import { TriscendenceModal } from './TriscendenceModal';
 import { QASpendModal } from './QASpendModal';
@@ -11,7 +11,7 @@ import { DocumentCard } from './DocumentCard';
 interface Props {
   anomaly: CharacterAnomaly;
   definition: AnomalyDefinition;
-  onUpdateAnomaly: (updated: CharacterAnomaly) => void;
+  onUpdateAnomaly: (updated: CharacterAnomaly, earnCode?: string) => void;
   burnout: number;
   qualityAssurances: Character['qualityAssurances'];
   onUpdateQA: (updated: Character['qualityAssurances']) => void;
@@ -19,19 +19,20 @@ interface Props {
   unlockedDocs?: PlaywalledDocument[];
   onGoto?: (code: string) => void;
   earnedCodes?: string[];
-  onEarnCode?: (code: string) => void;
 }
 
 const OUTCOME_ICONS: Record<string, string> = {
   success: '▲',
   tiered: '★',
   failure: '✕',
+  triscendence: '✦',
 };
 
 const OUTCOME_CLASSES: Record<string, string> = {
   success: 'outcome-success',
   tiered: 'outcome-tiered',
   failure: 'outcome-failure',
+  triscendence: 'outcome-triscendence',
 };
 
 function getRollDetail(r: DiceRollResult, tieredMode?: TieredMode): string {
@@ -47,8 +48,29 @@ function getRollDetail(r: DiceRollResult, tieredMode?: TieredMode): string {
   return `${r.effectiveThrees} three${r.effectiveThrees !== 1 ? 's' : ''}`;
 }
 
-export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly, burnout, qualityAssurances, onUpdateQA, onCommend, unlockedDocs, onGoto, earnedCodes, onEarnCode }: Props) {
-  const allAbilities = [...definition.abilities, ...(anomaly.additionalAbilities ?? [])];
+export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly, burnout, qualityAssurances, onUpdateQA, onCommend, unlockedDocs, onGoto, earnedCodes }: Props) {
+  const allAbilities = [
+    ...definition.abilities.map((base) => {
+      const additions = (anomaly.outcomeAdditions ?? []).filter(
+        (a) => a.targetAbilityName === base.name
+      );
+      if (additions.length === 0) return base;
+      return {
+        ...base,
+        outcomes: [...base.outcomes, ...additions.map((a) => a.outcome)],
+      };
+    }),
+    ...(anomaly.additionalAbilities ?? []),
+  ];
+  const personalizationCards = (anomaly.outcomeAdditions ?? [])
+    .filter((a): a is OutcomeAddition & { personalization: NonNullable<OutcomeAddition['personalization']>; sourceCode: string } =>
+      !!a.personalization && !!a.sourceCode
+    )
+    .map(a => ({
+      key: a.sourceCode,
+      name: unlockedDocs?.find(d => d.code === a.sourceCode)?.title ?? a.sourceCode,
+      personalization: a.personalization,
+    }));
   const [rollResults, setRollResults] = useState<Partial<Record<string, DiceRollResult>>>({});
   const [showTriscendence, setShowTriscendence] = useState(false);
   const [triscendenceAbility, setTriscendenceAbility] = useState<string | null>(null);
@@ -78,11 +100,14 @@ export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly, burnout, qu
       [...existing.answers[1]] as AnswerCheckboxes,
     ];
     answers[answerIndex][boxIndex] = !answers[answerIndex][boxIndex];
+    let codeToEarn: string | undefined;
     if (answers[answerIndex].every(b => b)) {
-      const abilityDef = definition.abilities.find(a => a.name === abilityName);
-      const answerCode = abilityDef?.personalization.answers[answerIndex].code;
+      const abilityDef = allAbilities.find(a => a.name === abilityName);
+      const personalCard = personalizationCards.find(c => c.key === abilityName);
+      const prompt = abilityDef?.personalization ?? personalCard?.personalization;
+      const answerCode = prompt?.answers[answerIndex].code;
       if (answerCode && !earnedCodes?.includes(answerCode)) {
-        onEarnCode?.(answerCode);
+        codeToEarn = answerCode;
       }
     }
     onUpdateAnomaly({
@@ -91,7 +116,7 @@ export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly, burnout, qu
         ...anomaly.personalizationProgress,
         [abilityName]: { ...existing, answers },
       },
-    });
+    }, codeToEarn);
   }
 
   return (
@@ -255,6 +280,50 @@ export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly, burnout, qu
                   })}
                 </div>
               )}
+            </div>
+          );
+        })}
+        {personalizationCards.map((card) => {
+          const progress = getProgress(card.key);
+          return (
+            <div key={card.key} className="ability-card">
+              <div className="ability-header">
+                <label className="ability-practiced-label">
+                  <input
+                    type="checkbox"
+                    className="ability-practiced-checkbox"
+                    checked={progress.practiced}
+                    onChange={() => togglePracticed(card.key)}
+                  />
+                  Practiced
+                </label>
+                <h3 className="ability-name">{card.name}</h3>
+              </div>
+              <div className="personalization-box">
+                <p className="personalization-question">{card.personalization.question}</p>
+                {card.personalization.answers.map((answer, answerIndex) => {
+                  const checkboxes = progress.answers[answerIndex as 0 | 1];
+                  const allChecked = checkboxes.every(b => b);
+                  return (
+                    <div key={answerIndex} className={`personalization-answer${allChecked ? ' personalization-answer--complete' : ''}`}>
+                      <span className="personalization-answer-text">{answer.text}</span>
+                      <div className="personalization-checkboxes">
+                        {checkboxes.map((checked, boxIndex) => (
+                          <input
+                            key={boxIndex}
+                            type="checkbox"
+                            checked={checked}
+                            disabled={allChecked}
+                            onChange={allChecked ? undefined : () => toggleCheckbox(card.key, answerIndex as 0 | 1, boxIndex)}
+                            className="personalization-checkbox"
+                          />
+                        ))}
+                        <span className="personalization-code">{answer.code}</span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           );
         })}

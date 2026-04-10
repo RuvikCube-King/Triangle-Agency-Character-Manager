@@ -79,9 +79,10 @@
   padding: 0.4rem 0.7rem;
   border-left: 3px solid var(--color-border);
 }
-.doc-outcome--success { border-left-color: #2a7a2a; }
-.doc-outcome--tiered  { border-left-color: var(--color-reality); }
-.doc-outcome--failure { border-left-color: var(--color-competency); }
+.doc-outcome--success      { border-left-color: #2a7a2a; }
+.doc-outcome--tiered       { border-left-color: var(--color-reality); }
+.doc-outcome--failure      { border-left-color: var(--color-competency); }
+.doc-outcome--triscendence { border-left-color: #7c3aed; }
 
 .doc-outcome-label {
   font-weight: 600;
@@ -90,6 +91,8 @@
   letter-spacing: 0.04em;
 }
 .doc-outcome ul { margin: 0.2rem 0 0; padding-left: 1.1rem; }
+
+.doc-outcome-addition-label { font-size: 0.8rem; color: var(--color-muted); margin-bottom: 0.3rem; }
 
 .doc-callout {
   font-size: 0.9rem;

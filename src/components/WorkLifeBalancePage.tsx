@@ -1,11 +1,12 @@
 import './WorkLifeBalance.css';
 import { useState } from 'react';
-import { Character } from '../types/character';
+import { Character, OutcomeAddition } from '../types/character';
 import { TrackName, BoxState } from '../types/workLifeBalance';
 import { AnomalyDefinition } from '../types/anomaly';
 import { TRACK_META } from '../data/workLifeBalance';
 import { PLAYWALLED_DOCUMENTS } from '../data/playwalleddocuments';
 import { AbilityDefinition } from '../types/anomaly';
+import { DocumentSection } from '../types/playwalleddocument';
 import { WLBTrack } from './WLBTrack';
 import { WLBRewardModal } from './WLBRewardModal';
 
@@ -78,6 +79,18 @@ export function WorkLifeBalancePage({ character, anomalyDefinition, onUpdateChar
             ...baseCharacter.anomaly,
             additionalAbilities: [...existing, newAbility],
           };
+        }
+      }
+
+      const outcomeAddSections = doc?.sections.filter(s => s.type === 'outcome-addition') ?? [];
+      if (outcomeAddSections.length > 0 && updatedAnomaly) {
+        const existing = updatedAnomaly.outcomeAdditions ?? [];
+        const newAdditions: OutcomeAddition[] = outcomeAddSections
+          .filter((s): s is Extract<DocumentSection, { type: 'outcome-addition' }> => s.type === 'outcome-addition')
+          .filter(s => !existing.some(e => e.targetAbilityName === s.targetAbilityName && e.outcome.trigger === s.outcome.trigger))
+          .map(s => ({ targetAbilityName: s.targetAbilityName, outcome: s.outcome, personalization: s.personalization }));
+        if (newAdditions.length > 0) {
+          updatedAnomaly = { ...updatedAnomaly, outcomeAdditions: [...existing, ...newAdditions] };
         }
       }
     }

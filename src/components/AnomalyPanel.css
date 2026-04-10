@@ -52,7 +52,7 @@
   height: 0.85rem;
   cursor: pointer;
 }
-.ability-name { font-size: 1rem; font-weight: 800; }
+.ability-name { font-size: 1rem; font-weight: 800; flex: 1; text-align: center; }
 .ability-roll-stat {
   font-size: 0.75rem;
   font-weight: 700;
@@ -79,17 +79,19 @@
   padding: 0.35rem 0.5rem;
   border-radius: var(--radius);
 }
-.outcome-success  { background: #eef4ff; }
-.outcome-tiered   { background: #fffbea; }
-.outcome-failure  { background: #fff0f0; }
+.outcome-success      { background: #eef4ff; }
+.outcome-tiered       { background: #fffbea; }
+.outcome-failure      { background: #fff0f0; }
+.outcome-triscendence { background: #f5f0ff; }
 .outcome-icon {
   font-size: 0.8rem;
   flex-shrink: 0;
   margin-top: 2px;
 }
-.outcome-success .outcome-icon  { color: var(--color-anomaly); }
-.outcome-tiered .outcome-icon   { color: var(--color-reality); }
-.outcome-failure .outcome-icon  { color: var(--color-competency); }
+.outcome-success .outcome-icon      { color: var(--color-anomaly); }
+.outcome-tiered .outcome-icon       { color: var(--color-reality); }
+.outcome-failure .outcome-icon      { color: var(--color-competency); }
+.outcome-triscendence .outcome-icon { color: #7c3aed; }
 .outcome-content { flex: 1; }
 .outcome-options {
   margin: 0.25rem 0 0 1rem;

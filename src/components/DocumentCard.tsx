@@ -38,6 +38,21 @@ function Section({
           ))}
         </div>
       );
+    case 'outcome-addition':
+      return (
+        <div className="doc-section doc-outcome-addition">
+          <p className="doc-outcome-addition-label">
+            Add to <strong>{section.targetAbilityName}</strong>:
+          </p>
+          <div className={`doc-outcome doc-outcome--${section.outcome.trigger}`}>
+            <span className="doc-outcome-label">{section.outcome.triggerLabel}</span>
+            <span>{section.outcome.description}</span>
+            {section.outcome.options && (
+              <ul>{section.outcome.options.map((opt, j) => <li key={j}>{opt}</li>)}</ul>
+            )}
+          </div>
+        </div>
+      );
     case 'callout': {
       const isGoto = section.variant === 'goto' && section.gotoCode;
       const alreadyEarned = isGoto && earnedCodes.includes(section.gotoCode!);

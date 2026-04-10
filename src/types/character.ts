@@ -28,12 +28,21 @@ export interface AbilityProgress {
   answers: [AnswerCheckboxes, AnswerCheckboxes];
 }
 
+export interface OutcomeAddition {
+  targetAbilityName: string;
+  outcome: import('./anomaly').Outcome;
+  personalization?: import('./anomaly').PersonalizationPrompt;
+  sourceCode?: string;
+}
+
 export interface CharacterAnomaly {
   anomalyId: string;
   // keyed by ability name
   personalizationProgress: Partial<Record<string, AbilityProgress>>;
   // abilities added via playwalled documents
   additionalAbilities?: import('./anomaly').AbilityDefinition[];
+  // outcome injections into existing abilities via playwalled documents
+  outcomeAdditions?: OutcomeAddition[];
 }
 
 export interface Relationship {

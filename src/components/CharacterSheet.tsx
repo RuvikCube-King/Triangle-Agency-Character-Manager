@@ -1,7 +1,8 @@
 import './CharacterSheet.css';
 import { useState } from 'react';
-import { Character, QA_KEYS, QAKey, CharacterAnomaly, CharacterReality } from '../types/character';
+import { Character, QA_KEYS, QAKey, CharacterAnomaly, CharacterReality, OutcomeAddition } from '../types/character';
 import { AbilityDefinition } from '../types/anomaly';
+import { DocumentSection } from '../types/playwalleddocument';
 import { rollDicePool, DiceRollResult, calcChaos } from '../utils/rollDice';
 import { TriscendenceModal } from './TriscendenceModal';
 import { ANOMALY_DEFINITIONS } from '../data/anomalies';
@@ -56,8 +57,32 @@ export function CharacterSheet({ character, onEdit, onBack, onUpdateCharacter }:
     ? COMPETENCY_DEFINITIONS.find((d) => d.id === character.competency!.competencyId) ?? null
     : null;
 
-  function handleUpdateAnomaly(updated: CharacterAnomaly) {
-    onUpdateCharacter({ ...character, anomaly: updated });
+  function handleUpdateAnomaly(updated: CharacterAnomaly, earnCode?: string) {
+    if (earnCode && !character.workLifeBalance.earnedCodes.includes(earnCode)) {
+      let finalAnomaly = updated;
+      const doc = PLAYWALLED_DOCUMENTS.find(d => d.code === earnCode);
+      const outcomeAddSections = doc?.sections.filter(s => s.type === 'outcome-addition') ?? [];
+      if (outcomeAddSections.length > 0 && finalAnomaly) {
+        const existing = finalAnomaly.outcomeAdditions ?? [];
+        const newAdditions: OutcomeAddition[] = outcomeAddSections
+          .filter((s): s is Extract<DocumentSection, { type: 'outcome-addition' }> => s.type === 'outcome-addition')
+          .filter(s => !existing.some(e => e.targetAbilityName === s.targetAbilityName && e.outcome.trigger === s.outcome.trigger))
+          .map(s => ({ targetAbilityName: s.targetAbilityName, outcome: s.outcome, personalization: s.personalization, sourceCode: earnCode }));
+        if (newAdditions.length > 0) {
+          finalAnomaly = { ...finalAnomaly, outcomeAdditions: [...existing, ...newAdditions] };
+        }
+      }
+      onUpdateCharacter({
+        ...character,
+        anomaly: finalAnomaly,
+        workLifeBalance: {
+          ...character.workLifeBalance,
+          earnedCodes: [...character.workLifeBalance.earnedCodes, earnCode],
+        },
+      });
+    } else {
+      onUpdateCharacter({ ...character, anomaly: updated });
+    }
   }
 
   function handleUpdateReality(updated: CharacterReality) {
@@ -101,6 +126,18 @@ export function CharacterSheet({ character, onEdit, onBack, onUpdateCharacter }:
           ...character.anomaly,
           additionalAbilities: [...existing, newAbility],
         };
+      }
+    }
+
+    const outcomeAddSections = doc?.sections.filter(s => s.type === 'outcome-addition') ?? [];
+    if (outcomeAddSections.length > 0 && updatedAnomaly) {
+      const existing = updatedAnomaly.outcomeAdditions ?? [];
+      const newAdditions: OutcomeAddition[] = outcomeAddSections
+        .filter((s): s is Extract<DocumentSection, { type: 'outcome-addition' }> => s.type === 'outcome-addition')
+        .filter(s => !existing.some(e => e.targetAbilityName === s.targetAbilityName && e.outcome.trigger === s.outcome.trigger))
+        .map(s => ({ targetAbilityName: s.targetAbilityName, outcome: s.outcome, personalization: s.personalization, sourceCode: code }));
+      if (newAdditions.length > 0) {
+        updatedAnomaly = { ...updatedAnomaly, outcomeAdditions: [...existing, ...newAdditions] };
       }
     }
 
@@ -440,7 +477,6 @@ export function CharacterSheet({ character, onEdit, onBack, onUpdateCharacter }:
                 unlockedDocs={anomalyDocs}
                 onGoto={handleEarnCode}
                 earnedCodes={earned}
-                onEarnCode={handleEarnCode}
               />
             )
             : (

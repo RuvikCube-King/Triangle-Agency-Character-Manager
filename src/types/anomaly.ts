@@ -10,7 +10,7 @@ export interface PersonalizationPrompt {
   answers: [PersonalizationAnswer, PersonalizationAnswer];
 }
 
-export type OutcomeTrigger = 'success' | 'tiered' | 'failure';
+export type OutcomeTrigger = 'success' | 'tiered' | 'triscendence' | 'failure';
 
 export type TieredMode = 'per-three' | 'per-extra' | 'six-plus' | 'per-one';
 
