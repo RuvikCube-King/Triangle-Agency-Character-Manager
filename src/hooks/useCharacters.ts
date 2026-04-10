@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Character, createDefaultCharacter } from '../types/character';
+import { Character, createDefaultCharacter, createDefaultWorkLifeBalance } from '../types/character';
 
 const STORAGE_KEY = 'ta-characters';
 
@@ -10,6 +10,9 @@ function migrateCharacter(c: any): Character {
   }
   delete c.primeDirective;
   delete c.sanctionedBehaviors;
+  if (!c.workLifeBalance) {
+    c.workLifeBalance = createDefaultWorkLifeBalance();
+  }
   return c as Character;
 }
 

@@ -1,13 +1,19 @@
+import './RealityPanel.css';
 import { CharacterReality } from '../types/character';
 import { RealityDefinition } from '../types/reality';
+import { PlaywalledDocument } from '../types/playwalleddocument';
+import { DocumentCard } from './DocumentCard';
 
 interface Props {
   reality: CharacterReality;
   definition: RealityDefinition;
   onUpdateReality: (updated: CharacterReality) => void;
+  unlockedDocs?: PlaywalledDocument[];
+  onGoto?: (code: string) => void;
+  earnedCodes?: string[];
 }
 
-export function RealityPanel({ reality, definition, onUpdateReality }: Props) {
+export function RealityPanel({ reality, definition, onUpdateReality, unlockedDocs, onGoto, earnedCodes }: Props) {
   function handleRealityTrackBox(index: number) {
     const updated: [boolean, boolean, boolean, boolean] = [...reality.realityTriggerBoxes] as [boolean, boolean, boolean, boolean];
     updated[index] = !updated[index];
@@ -125,6 +131,20 @@ export function RealityPanel({ reality, definition, onUpdateReality }: Props) {
           </div>
         ))}
       </div>
+      {(unlockedDocs?.length ?? 0) > 0 && (
+        <div className="unlocked-docs-section">
+          <h4 className="unlocked-docs-heading">Unlocked Documents</h4>
+          {unlockedDocs!.map(doc => (
+            <DocumentCard
+              key={doc.code}
+              doc={doc}
+              trackClass="wlb-track--reality"
+              earnedCodes={earnedCodes ?? []}
+              onGoto={onGoto}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

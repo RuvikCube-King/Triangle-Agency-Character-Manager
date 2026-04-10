@@ -1,3 +1,21 @@
+import { WorkLifeBalance, WLBTrackState } from './workLifeBalance';
+export type { WorkLifeBalance };
+
+export function createDefaultWLBTrack(): WLBTrackState {
+  return { boxes: Array(30).fill('empty') as WLBTrackState['boxes'] };
+}
+
+export function createDefaultWorkLifeBalance(): WorkLifeBalance {
+  return {
+    competency: createDefaultWLBTrack(),
+    reality: createDefaultWLBTrack(),
+    anomaly: createDefaultWLBTrack(),
+    earnedCodes: [],
+    mvpCount: 0,
+    probationCount: 0,
+  };
+}
+
 export interface QualityAssurance {
   current: number;
   max: number;
@@ -14,6 +32,8 @@ export interface CharacterAnomaly {
   anomalyId: string;
   // keyed by ability name
   personalizationProgress: Partial<Record<string, AbilityProgress>>;
+  // abilities added via playwalled documents
+  additionalAbilities?: import('./anomaly').AbilityDefinition[];
 }
 
 export interface Relationship {
@@ -76,6 +96,8 @@ export interface Character {
     professionalism: QualityAssurance;
     subtlety: QualityAssurance;
   };
+  // Work/Life Balance
+  workLifeBalance: WorkLifeBalance;
 }
 
 export const QA_KEYS = [
@@ -129,6 +151,7 @@ export function createDefaultCharacter(): Omit<Character, 'id'> {
       professionalism: { current: 0, max: 9 },
       subtlety: { current: 0, max: 9 },
     },
+    workLifeBalance: createDefaultWorkLifeBalance(),
   };
 }
 

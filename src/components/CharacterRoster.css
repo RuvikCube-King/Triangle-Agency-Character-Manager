@@ -1,0 +1,39 @@
+/* ── Roster ───────────────────────────────────────────────────── */
+.roster {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+.roster-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+}
+.roster-header h1 { font-size: 1.8rem; color: var(--color-primary); }
+
+.roster-empty {
+  text-align: center;
+  padding: 3rem;
+  color: var(--color-muted);
+  background: var(--color-surface);
+  border-radius: var(--radius);
+  border: 1px dashed var(--color-border);
+}
+
+.roster-list { list-style: none; display: flex; flex-direction: column; gap: 0.75rem; }
+
+.roster-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+.roster-item-info { display: flex; flex-direction: column; gap: 2px; }
+.roster-item-name { font-size: 1.1rem; font-weight: 700; }
+.roster-item-title { font-size: 0.85rem; color: var(--color-muted); }
+.roster-item-actions { display: flex; gap: 0.5rem; }

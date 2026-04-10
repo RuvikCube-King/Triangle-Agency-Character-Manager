@@ -1,3 +1,4 @@
+import './RequisitionsPanel.css';
 import { Requisition } from '../types/character';
 
 interface Props {

@@ -1,3 +1,4 @@
+import './CharacterRoster.css';
 import { Character } from '../types/character';
 
 interface Props {

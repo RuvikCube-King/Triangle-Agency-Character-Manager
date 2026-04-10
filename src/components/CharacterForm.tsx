@@ -1,3 +1,4 @@
+import './CharacterForm.css';
 import { useState } from 'react';
 import { Character, QA_KEYS, QAKey, createDefaultReality, Relationship, Requisition, createDefaultRequisition, createDefaultCompetency } from '../types/character';
 import { ANOMALY_DEFINITIONS } from '../data/anomalies';
@@ -97,7 +98,8 @@ export function CharacterForm({ character, onSave, onCancel }: Props) {
         );
         const updatedQA = { ...savedForm.qualityAssurances };
         QA_KEYS.forEach((key) => {
-          updatedQA[key] = { ...updatedQA[key], current: chosenKeys.has(key) ? 3 : 0 };
+          const chosen = chosenKeys.has(key);
+          updatedQA[key] = { ...updatedQA[key], current: chosen ? 3 : 0, max: chosen ? 3 : 0 };
         });
         savedForm = {
           ...savedForm,

@@ -1,0 +1,216 @@
+/* ── Anomaly Panel ────────────────────────────────────────────── */
+.anomaly-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+  box-shadow: var(--shadow);
+}
+.anomaly-panel-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--color-anomaly);
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+.ability-list { display: flex; flex-direction: column; gap: 1rem; }
+
+.ability-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  background: var(--color-bg);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.ability-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.ability-practiced-label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  cursor: pointer;
+  user-select: none;
+}
+.ability-practiced-label:has(.ability-practiced-checkbox:checked) {
+  color: var(--color-anomaly);
+}
+.ability-practiced-checkbox {
+  accent-color: var(--color-anomaly);
+  width: 0.85rem;
+  height: 0.85rem;
+  cursor: pointer;
+}
+.ability-name { font-size: 1rem; font-weight: 800; }
+.ability-roll-stat {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 2px 10px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.ability-roll-stat:hover { opacity: 0.75; }
+.ability-description { font-size: 0.875rem; color: var(--color-muted); line-height: 1.5; }
+
+.ability-outcomes { display: flex; flex-direction: column; gap: 0.4rem; }
+.outcome-row {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  padding: 0.35rem 0.5rem;
+  border-radius: var(--radius);
+}
+.outcome-success  { background: #eef4ff; }
+.outcome-tiered   { background: #fffbea; }
+.outcome-failure  { background: #fff0f0; }
+.outcome-icon {
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.outcome-success .outcome-icon  { color: var(--color-anomaly); }
+.outcome-tiered .outcome-icon   { color: var(--color-reality); }
+.outcome-failure .outcome-icon  { color: var(--color-competency); }
+.outcome-content { flex: 1; }
+.outcome-options {
+  margin: 0.25rem 0 0 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.personalization-box {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  background: var(--color-surface);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.personalization-question {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-muted);
+  font-style: italic;
+}
+.personalization-answer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  flex-wrap: wrap;
+}
+.personalization-answer-text { font-size: 0.875rem; flex: 1; }
+.personalization-checkboxes {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.personalization-checkbox {
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+  accent-color: var(--color-anomaly);
+}
+.personalization-code {
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: var(--color-anomaly);
+  min-width: 2.5ch;
+}
+.personalization-answer--complete { opacity: 0.6; }
+.personalization-answer--complete .personalization-code { color: var(--color-anomaly); font-weight: 700; }
+
+/* ── Dice Roll Result ─────────────────────────────────────────── */
+.ability-roll-result {
+  position: relative;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 0.75rem;
+  margin-top: 0.75rem;
+}
+.roll-result-clear {
+  position: absolute;
+  top: 0.4rem;
+  right: 0.4rem;
+  background: none;
+  border: none;
+  color: var(--color-muted);
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1;
+  padding: 0 0.25rem;
+}
+.roll-result-clear:hover { color: var(--color-text); }
+.roll-result-dice {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin-bottom: 0.5rem;
+}
+.die-face {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.6rem;
+  height: 2.4rem;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  border: none;
+  border-radius: 0;
+  font-size: 0.85rem;
+  font-weight: 700;
+  font-family: monospace;
+  color: var(--color-muted);
+  background: var(--color-border);
+  padding-top: 0.75rem;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.15));
+}
+.die-face--hit {
+  background: var(--color-anomaly);
+  color: #fff;
+  filter: drop-shadow(0 1px 4px rgba(27,58,140,0.45));
+}
+.die-face--burned {
+  background: #e8e4e0;
+  color: var(--color-competency);
+  text-decoration: line-through;
+  opacity: 0.55;
+  filter: none;
+}
+.roll-result-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+}
+.roll-result-tier { font-weight: 700; }
+.roll-result-tier--success { color: var(--color-anomaly); }
+.roll-result-tier--tiered  { color: var(--color-reality); }
+.roll-result-tier--failure { color: var(--color-competency); }
+.roll-result-detail { color: var(--color-muted); font-size: 0.85rem; }
+.roll-result-chaos { color: var(--color-chaos); font-size: 0.85rem; font-weight: 700; }

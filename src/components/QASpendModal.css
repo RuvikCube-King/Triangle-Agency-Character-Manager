@@ -1,0 +1,56 @@
+/* ── QA Spend Modal ───────────────────────────────────────────── */
+.qa-spend-overlay {
+  position: fixed; inset: 0;
+  background: rgba(27, 58, 140, 0.25);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 1000;
+}
+.qa-spend-modal {
+  background: var(--color-anomaly);
+  color: #fff;
+  border-radius: var(--radius);
+  padding: 1.75rem 2rem;
+  max-width: 420px; width: 90%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+  display: flex; flex-direction: column; gap: 1rem;
+}
+.qa-spend-title {
+  font-size: 1.3rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  margin: 0;
+}
+.qa-spend-ability-name { font-size: 0.9rem; opacity: 0.8; margin: -0.5rem 0 0; }
+.qa-spend-qa-row { display: flex; align-items: center; gap: 0.75rem; }
+.qa-spend-qa-label { font-size: 0.85rem; font-weight: 600; flex: 0 0 auto; }
+.qa-spend-pips { display: flex; gap: 4px; flex-wrap: wrap; }
+.qa-spend-pip {
+  width: 18px; height: 18px;
+  clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+  border: none; padding: 0; cursor: default;
+  background: rgba(255,255,255,0.15);
+}
+.qa-spend-pip.pip-filled { background: var(--color-competency); cursor: pointer; }
+.qa-spend-pip.pip-filled:hover { background: #8e1818; }
+.qa-spend-pip.pip-spent {
+  background: rgba(255,255,255,0.08);
+  filter: drop-shadow(0 0 2px rgba(255,255,255,0.55));
+  cursor: pointer;
+}
+.qa-spend-pip.pip-spent:hover { filter: drop-shadow(0 0 2px rgba(255,255,255,0.85)); }
+.qa-spend-fraction { font-size: 0.8rem; opacity: 0.8; white-space: nowrap; }
+.qa-spend-dice { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+.die-face--boosted {
+  background: #3a5fb0;
+  color: #fff;
+  filter: drop-shadow(0 0 4px rgba(255,255,255,0.75));
+}
+.qa-spend-summary { display: flex; align-items: center; gap: 0.75rem; font-size: 0.9rem; }
+.qa-spend-accept {
+  background: #fff; color: var(--color-anomaly);
+  border: none; border-radius: var(--radius);
+  padding: 0.6rem 1.5rem;
+  font-size: 0.95rem; font-weight: 700;
+  cursor: pointer; align-self: flex-end;
+  letter-spacing: 0.03em;
+}
+.qa-spend-accept:hover { background: #f0f0f0; }

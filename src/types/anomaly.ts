@@ -12,7 +12,7 @@ export interface PersonalizationPrompt {
 
 export type OutcomeTrigger = 'success' | 'tiered' | 'failure';
 
-export type TieredMode = 'per-three' | 'per-extra';
+export type TieredMode = 'per-three' | 'per-extra' | 'six-plus' | 'per-one';
 
 export interface Outcome {
   trigger: OutcomeTrigger;
@@ -26,7 +26,7 @@ export interface AbilityDefinition {
   description: string;  // flavor text + roll instruction
   rollStat: QAKey;
   outcomes: Outcome[];
-  personalization: PersonalizationPrompt;
+  personalization?: PersonalizationPrompt;
   tieredMode?: TieredMode;  // defaults to 'per-three' if absent
 }
 

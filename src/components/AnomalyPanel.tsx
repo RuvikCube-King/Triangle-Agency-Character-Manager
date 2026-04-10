@@ -1,13 +1,25 @@
+import './AnomalyPanel.css';
 import { useState } from 'react';
-import { AnomalyDefinition } from '../types/anomaly';
-import { AbilityProgress, AnswerCheckboxes, CharacterAnomaly } from '../types/character';
-import { DiceRollResult, rollDicePool } from '../utils/rollDice';
+import { AnomalyDefinition, TieredMode } from '../types/anomaly';
+import { AbilityProgress, AnswerCheckboxes, CharacterAnomaly, Character } from '../types/character';
+import { DiceRollResult, rollDicePool, calcChaos } from '../utils/rollDice';
+import { TriscendenceModal } from './TriscendenceModal';
+import { QASpendModal } from './QASpendModal';
+import { PlaywalledDocument } from '../types/playwalleddocument';
+import { DocumentCard } from './DocumentCard';
 
 interface Props {
   anomaly: CharacterAnomaly;
   definition: AnomalyDefinition;
   onUpdateAnomaly: (updated: CharacterAnomaly) => void;
   burnout: number;
+  qualityAssurances: Character['qualityAssurances'];
+  onUpdateQA: (updated: Character['qualityAssurances']) => void;
+  onCommend: () => void;
+  unlockedDocs?: PlaywalledDocument[];
+  onGoto?: (code: string) => void;
+  earnedCodes?: string[];
+  onEarnCode?: (code: string) => void;
 }
 
 const OUTCOME_ICONS: Record<string, string> = {
@@ -22,8 +34,26 @@ const OUTCOME_CLASSES: Record<string, string> = {
   failure: 'outcome-failure',
 };
 
-export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly, burnout }: Props) {
+function getRollDetail(r: DiceRollResult, tieredMode?: TieredMode): string {
+  if (r.effectiveThrees === 0) {
+    return r.burnedIndices.length > 0 ? `${r.burnedIndices.length} burned` : 'No threes';
+  }
+  if (r.tier === 'tiered') {
+    if (tieredMode === 'six-plus') return `${r.effectiveThrees} threes — threshold met`;
+    if (tieredMode === 'per-one')  return `${r.effectiveThrees} three${r.effectiveThrees !== 1 ? 's' : ''} to spend`;
+    return `${r.effectiveThrees} three${r.effectiveThrees !== 1 ? 's' : ''} — ${r.tieredStacks} stack${r.tieredStacks !== 1 ? 's' : ''}`;
+  }
+  if (tieredMode === 'six-plus') return `${r.effectiveThrees} three${r.effectiveThrees !== 1 ? 's' : ''} — need 6 for threshold`;
+  return `${r.effectiveThrees} three${r.effectiveThrees !== 1 ? 's' : ''}`;
+}
+
+export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly, burnout, qualityAssurances, onUpdateQA, onCommend, unlockedDocs, onGoto, earnedCodes, onEarnCode }: Props) {
+  const allAbilities = [...definition.abilities, ...(anomaly.additionalAbilities ?? [])];
   const [rollResults, setRollResults] = useState<Partial<Record<string, DiceRollResult>>>({});
+  const [showTriscendence, setShowTriscendence] = useState(false);
+  const [triscendenceAbility, setTriscendenceAbility] = useState<string | null>(null);
+  const [showQASpend, setShowQASpend] = useState(false);
+  const [qaSpendAbility, setQASpendAbility] = useState<string | null>(null);
   function getProgress(abilityName: string): AbilityProgress {
     const existing = anomaly.personalizationProgress[abilityName];
     const defaultBoxes: AnswerCheckboxes = [false, false, false];
@@ -48,6 +78,13 @@ export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly, burnout }: 
       [...existing.answers[1]] as AnswerCheckboxes,
     ];
     answers[answerIndex][boxIndex] = !answers[answerIndex][boxIndex];
+    if (answers[answerIndex].every(b => b)) {
+      const abilityDef = definition.abilities.find(a => a.name === abilityName);
+      const answerCode = abilityDef?.personalization.answers[answerIndex].code;
+      if (answerCode && !earnedCodes?.includes(answerCode)) {
+        onEarnCode?.(answerCode);
+      }
+    }
     onUpdateAnomaly({
       ...anomaly,
       personalizationProgress: {
@@ -59,29 +96,81 @@ export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly, burnout }: 
 
   return (
     <div className="anomaly-panel">
+      {showQASpend && qaSpendAbility && rollResults[qaSpendAbility] && (() => {
+        const spendAbility = allAbilities.find((a) => a.name === qaSpendAbility)!;
+        const qa = qualityAssurances[spendAbility.rollStat];
+        return (
+          <QASpendModal
+            abilityName={qaSpendAbility}
+            rollStat={spendAbility.rollStat}
+            qa={qa}
+            originalResult={rollResults[qaSpendAbility]!}
+            tieredMode={spendAbility.tieredMode}
+            onAccept={(modifiedResult, spent) => {
+              setRollResults((prev) => ({ ...prev, [qaSpendAbility]: modifiedResult }));
+              if (spent > 0) {
+                onUpdateQA({
+                  ...qualityAssurances,
+                  [spendAbility.rollStat]: { ...qa, current: qa.current - spent },
+                });
+              }
+              setShowQASpend(false);
+              setQASpendAbility(null);
+            }}
+          />
+        );
+      })()}
+      {showTriscendence && triscendenceAbility && rollResults[triscendenceAbility] && (() => {
+        const tAbility = allAbilities.find((a) => a.name === triscendenceAbility);
+        return (
+          <TriscendenceModal
+            result={rollResults[triscendenceAbility]!}
+            tieredMode={tAbility?.tieredMode}
+            qualityAssurances={qualityAssurances}
+            onApply={(updated) => {
+              setRollResults((prev) => ({ ...prev, [triscendenceAbility]: updated }));
+              setShowTriscendence(false);
+            }}
+            onApplyQA={(updated) => { onUpdateQA(updated); setShowTriscendence(false); }}
+            onCommend={() => { onCommend(); setShowTriscendence(false); }}
+            onDismiss={() => setShowTriscendence(false)}
+          />
+        );
+      })()}
       <h2 className="anomaly-panel-title">{definition.name}</h2>
       <div className="ability-list">
-        {definition.abilities.map((ability) => {
+        {allAbilities.map((ability) => {
           const progress = getProgress(ability.name);
           return (
             <div key={ability.name} className="ability-card">
               <div className="ability-header">
-                <label className="ability-practiced-label">
-                  <input
-                    type="checkbox"
-                    className="ability-practiced-checkbox"
-                    checked={progress.practiced}
-                    onChange={() => togglePracticed(ability.name)}
-                  />
-                  Practiced
-                </label>
+                {ability.personalization && (
+                  <label className="ability-practiced-label">
+                    <input
+                      type="checkbox"
+                      className="ability-practiced-checkbox"
+                      checked={progress.practiced}
+                      onChange={() => togglePracticed(ability.name)}
+                    />
+                    Practiced
+                  </label>
+                )}
                 <h3 className="ability-name">{ability.name}</h3>
                 <button
                   type="button"
                   className="ability-roll-stat"
                   onClick={() => {
-                    const result = rollDicePool(burnout, ability.tieredMode);
+                    const qa = qualityAssurances[ability.rollStat];
+                    const effectiveBurnout = (qa.current === 0 || qa.max === 0) ? burnout + 1 : burnout;
+                    const result = rollDicePool(effectiveBurnout, ability.tieredMode);
                     setRollResults((prev) => ({ ...prev, [ability.name]: result }));
+                    if (result.triscendence) {
+                      setShowTriscendence(true);
+                      setTriscendenceAbility(ability.name);
+                    } else if (qa.max > 0 && qa.current > 0) {
+                      setShowQASpend(true);
+                      setQASpendAbility(ability.name);
+                    }
                   }}
                 >
                   Roll {ability.rollStat.charAt(0).toUpperCase() + ability.rollStat.slice(1)}
@@ -131,44 +220,59 @@ export function AnomalyPanel({ anomaly, definition, onUpdateAnomaly, burnout }: 
                         {r.tier === 'success' ? '▲ Success' : r.tier === 'tiered' ? '★ Tiered' : '✕ Failure'}
                       </span>
                       <span className="roll-result-detail">
-                        {r.effectiveThrees === 0
-                          ? r.burnedIndices.length > 0 ? `${r.burnedIndices.length} burned` : 'No threes'
-                          : r.tier === 'tiered'
-                          ? `${r.effectiveThrees} three${r.effectiveThrees !== 1 ? 's' : ''} — ${r.tieredStacks} stack${r.tieredStacks !== 1 ? 's' : ''}`
-                          : `${r.effectiveThrees} three${r.effectiveThrees !== 1 ? 's' : ''}`}
+                        {getRollDetail(r, ability.tieredMode)}
                       </span>
+                      <span className="roll-result-chaos">◈ {calcChaos(r)} chaos</span>
                     </div>
                   </div>
                 );
               })()}
 
-              <div className="personalization-box">
-                <p className="personalization-question">{ability.personalization.question}</p>
-                {ability.personalization.answers.map((answer, answerIndex) => {
-                  const checkboxes: AnswerCheckboxes = progress.answers[answerIndex as 0 | 1];
-                  return (
-                    <div key={answerIndex} className="personalization-answer">
-                      <span className="personalization-answer-text">{answer.text}</span>
-                      <div className="personalization-checkboxes">
-                        {checkboxes.map((checked, boxIndex) => (
-                          <input
-                            key={boxIndex}
-                            type="checkbox"
-                            checked={checked}
-                            onChange={() => toggleCheckbox(ability.name, answerIndex as 0 | 1, boxIndex)}
-                            className="personalization-checkbox"
-                          />
-                        ))}
-                        <span className="personalization-code">{answer.code}</span>
+              {ability.personalization && (
+                <div className="personalization-box">
+                  <p className="personalization-question">{ability.personalization.question}</p>
+                  {ability.personalization.answers.map((answer, answerIndex) => {
+                    const checkboxes: AnswerCheckboxes = progress.answers[answerIndex as 0 | 1];
+                    const allChecked = checkboxes.every(b => b);
+                    return (
+                      <div key={answerIndex} className={`personalization-answer${allChecked ? ' personalization-answer--complete' : ''}`}>
+                        <span className="personalization-answer-text">{answer.text}</span>
+                        <div className="personalization-checkboxes">
+                          {checkboxes.map((checked, boxIndex) => (
+                            <input
+                              key={boxIndex}
+                              type="checkbox"
+                              checked={checked}
+                              disabled={allChecked}
+                              onChange={allChecked ? undefined : () => toggleCheckbox(ability.name, answerIndex as 0 | 1, boxIndex)}
+                              className="personalization-checkbox"
+                            />
+                          ))}
+                          <span className="personalization-code">{answer.code}</span>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           );
         })}
       </div>
+      {(unlockedDocs?.length ?? 0) > 0 && (
+        <div className="unlocked-docs-section">
+          <h4 className="unlocked-docs-heading">Unlocked Documents</h4>
+          {unlockedDocs!.map(doc => (
+            <DocumentCard
+              key={doc.code}
+              doc={doc}
+              trackClass="wlb-track--anomaly"
+              earnedCodes={earnedCodes ?? []}
+              onGoto={onGoto}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

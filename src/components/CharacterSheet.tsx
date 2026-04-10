@@ -1,13 +1,22 @@
+import './CharacterSheet.css';
 import { useState } from 'react';
 import { Character, QA_KEYS, QAKey, CharacterAnomaly, CharacterReality } from '../types/character';
+import { AbilityDefinition } from '../types/anomaly';
+import { rollDicePool, DiceRollResult, calcChaos } from '../utils/rollDice';
+import { TriscendenceModal } from './TriscendenceModal';
 import { ANOMALY_DEFINITIONS } from '../data/anomalies';
 import { REALITY_DEFINITIONS } from '../data/realities';
 import { COMPETENCY_DEFINITIONS } from '../data/competencies';
 import { AnomalyPanel } from './AnomalyPanel';
 import { RealityPanel } from './RealityPanel';
 import { RequisitionsPanel } from './RequisitionsPanel';
+import { WorkLifeBalancePage } from './WorkLifeBalancePage';
+import { PLAYWALLED_DOCUMENTS } from '../data/playwalleddocuments';
+import { getCodeTrack } from '../data/workLifeBalance';
+import { DocumentCard } from './DocumentCard';
+import { DocumentsPanel } from './DocumentsPanel';
 
-type Tab = 'overview' | 'anomaly' | 'relationships' | 'requisitions';
+type Tab = 'overview' | 'anomaly' | 'relationships' | 'requisitions' | 'documents';
 
 interface Props {
   character: Character;
@@ -18,6 +27,22 @@ interface Props {
 
 export function CharacterSheet({ character, onEdit, onBack, onUpdateCharacter }: Props) {
   const [activeTab, setActiveTab] = useState<Tab>('overview');
+  const [boardRollResult, setBoardRollResult] = useState<DiceRollResult | null>(null);
+  const [showTriscendence, setShowTriscendence] = useState(false);
+  const [showWLB, setShowWLB] = useState(false);
+
+  const burnoutReleaseActive = character.reality?.burnoutRelease.activated ?? false;
+  const effectiveBurnout = burnoutReleaseActive ? 0 : character.additionalBurnout;
+
+  function handleBoardRoll() {
+    const raw = rollDicePool(effectiveBurnout + 1);
+    setBoardRollResult({
+      ...raw,
+      tier: raw.tier === 'failure' ? 'failure' : 'success',
+      tieredStacks: 0,
+    });
+    if (raw.triscendence) setShowTriscendence(true);
+  }
 
   const anomalyDefinition = character.anomaly
     ? ANOMALY_DEFINITIONS.find((d) => d.id === character.anomaly!.anomalyId) ?? null
@@ -37,6 +62,68 @@ export function CharacterSheet({ character, onEdit, onBack, onUpdateCharacter }:
 
   function handleUpdateReality(updated: CharacterReality) {
     onUpdateCharacter({ ...character, reality: updated });
+  }
+
+  function handleUpdateQA(updated: Character['qualityAssurances']) {
+    onUpdateCharacter({ ...character, qualityAssurances: updated });
+  }
+
+  function handleCommend() {
+    onUpdateCharacter({ ...character, commendations: character.commendations + 3 });
+    setShowTriscendence(false);
+  }
+
+  const earned = character.workLifeBalance.earnedCodes;
+  const unlockedDocs = PLAYWALLED_DOCUMENTS.filter(d => earned.includes(d.code));
+  const anomalyDocs = unlockedDocs.filter(d => getCodeTrack(d.code) === 'anomaly');
+  const realityDocs = unlockedDocs.filter(d => getCodeTrack(d.code) === 'reality');
+  const competencyDocs = unlockedDocs.filter(d => getCodeTrack(d.code) === 'competency');
+
+  function handleEarnCode(code: string) {
+    if (character.workLifeBalance.earnedCodes.includes(code)) return;
+
+    const doc = PLAYWALLED_DOCUMENTS.find(d => d.code === code);
+    const abilitySection = doc?.sections.find(s => s.type === 'ability');
+
+    let updatedAnomaly = character.anomaly;
+    if (abilitySection && abilitySection.type === 'ability' && character.anomaly) {
+      const newAbility: AbilityDefinition = {
+        name: doc!.title,
+        description: abilitySection.setup,
+        rollStat: abilitySection.rollStat,
+        outcomes: abilitySection.outcomes,
+        personalization: abilitySection.personalization,
+        tieredMode: abilitySection.tieredMode
+      };
+      const existing = character.anomaly.additionalAbilities ?? [];
+      if (!existing.some(a => a.name === newAbility.name)) {
+        updatedAnomaly = {
+          ...character.anomaly,
+          additionalAbilities: [...existing, newAbility],
+        };
+      }
+    }
+
+    onUpdateCharacter({
+      ...character,
+      anomaly: updatedAnomaly,
+      workLifeBalance: {
+        ...character.workLifeBalance,
+        earnedCodes: [...character.workLifeBalance.earnedCodes, code],
+      },
+    });
+  }
+
+  function handleAcknowledgeA1() {
+    if (character.workLifeBalance.earnedCodes.includes('A1')) return;
+    onUpdateCharacter({
+      ...character,
+      demerits: character.demerits + 3,
+      workLifeBalance: {
+        ...character.workLifeBalance,
+        earnedCodes: [...character.workLifeBalance.earnedCodes, 'A1'],
+      },
+    });
   }
 
   function handleCounter(key: 'commendations' | 'demerits' | 'additionalBurnout', delta: number) {
@@ -59,10 +146,20 @@ export function CharacterSheet({ character, onEdit, onBack, onUpdateCharacter }:
     <div className="sheet-page">
       <div className="sheet-header">
         <button className="btn btn-secondary" onClick={onBack}>← Roster</button>
+        <button className="btn btn-secondary" onClick={() => setShowWLB(true)}>Work / Life Balance</button>
         <button className="btn btn-primary" onClick={onEdit}>Edit</button>
       </div>
 
-      <div className="sheet-body">
+      {showWLB && (
+        <WorkLifeBalancePage
+          character={character}
+          anomalyDefinition={anomalyDefinition}
+          onUpdateCharacter={onUpdateCharacter}
+          onBack={() => setShowWLB(false)}
+        />
+      )}
+
+      <div className="sheet-body" style={showWLB ? { display: 'none' } : undefined}>
 
         {/* Identity — always visible */}
         <section className="sheet-section sheet-identity">
@@ -110,7 +207,32 @@ export function CharacterSheet({ character, onEdit, onBack, onUpdateCharacter }:
           >
             Requisitions
           </button>
+          <button
+            className={`sheet-tab${activeTab === 'documents' ? ' active' : ''}`}
+            onClick={() => setActiveTab('documents')}
+          >
+            Documents
+          </button>
         </div>
+
+        {showTriscendence && boardRollResult && (
+          <TriscendenceModal
+            result={boardRollResult}
+            tieredMode={undefined}
+            qualityAssurances={character.qualityAssurances}
+            onApply={(updated) => {
+              setBoardRollResult({
+                ...updated,
+                tier: updated.tier === 'failure' ? 'failure' : 'success',
+                tieredStacks: 0,
+              });
+              setShowTriscendence(false);
+            }}
+            onApplyQA={(updated) => { handleUpdateQA(updated); setShowTriscendence(false); }}
+            onCommend={handleCommend}
+            onDismiss={() => setShowTriscendence(false)}
+          />
+        )}
 
         {/* Overview tab */}
         {activeTab === 'overview' && (
@@ -181,6 +303,21 @@ export function CharacterSheet({ character, onEdit, onBack, onUpdateCharacter }:
                 </div>
               </section>
 
+              {competencyDocs.length > 0 && (
+                <div className="unlocked-docs-section">
+                  <h4 className="unlocked-docs-heading">Unlocked Documents</h4>
+                  {competencyDocs.map(doc => (
+                    <DocumentCard
+                      key={doc.code}
+                      doc={doc}
+                      trackClass="wlb-track--competency"
+                      earnedCodes={earned}
+                      onGoto={handleEarnCode}
+                    />
+                  ))}
+                </div>
+              )}
+
             </div>
 
             <div className="sheet-right">
@@ -219,7 +356,7 @@ export function CharacterSheet({ character, onEdit, onBack, onUpdateCharacter }:
                 <div className="qa-display">
                   {QA_KEYS.map((key) => {
                     const qa = character.qualityAssurances[key];
-                    const pips = qa.max > 0 ? qa.max : 9;
+                    const pips = qa.max;
                     return (
                       <div key={key} className="qa-display-row">
                         <span className="qa-display-label">
@@ -235,11 +372,53 @@ export function CharacterSheet({ character, onEdit, onBack, onUpdateCharacter }:
                             />
                           ))}
                         </div>
-                        <span className="qa-fraction">{qa.current}/{qa.max || 9}</span>
+                        <span className="qa-fraction">{qa.current}/{qa.max}</span>
                       </div>
                     );
                   })}
                 </div>
+              </section>
+
+              {/* Ask The Board */}
+              <section className="sheet-section board-roll-section">
+                <button type="button" className="btn btn-primary board-roll-btn" onClick={handleBoardRoll}>
+                  Ask The Board
+                </button>
+                {boardRollResult && (() => {
+                  const r = boardRollResult;
+                  const burnedSet = new Set(r.burnedIndices);
+                  return (
+                    <div className="board-roll-result">
+                      <button
+                        type="button"
+                        className="roll-result-clear"
+                        onClick={() => setBoardRollResult(null)}
+                        aria-label="Clear roll result"
+                      >×</button>
+                      <div className="roll-result-dice">
+                        {r.dice.map((face, i) => (
+                          <span
+                            key={i}
+                            className={`die-face${face === 3 && !burnedSet.has(i) ? ' die-face--hit' : ''}${burnedSet.has(i) ? ' die-face--burned' : ''}`}
+                          >
+                            {face}
+                          </span>
+                        ))}
+                      </div>
+                      <div className="roll-result-summary">
+                        <span className={`roll-result-tier roll-result-tier--${r.tier}`}>
+                          {r.tier === 'success' ? '▲ Success' : '✕ Failure'}
+                        </span>
+                        <span className="roll-result-detail">
+                          {r.effectiveThrees === 0
+                            ? (r.burnedIndices.length > 0 ? `${r.burnedIndices.length} burned` : 'No threes')
+                            : `${r.effectiveThrees} three${r.effectiveThrees !== 1 ? 's' : ''}`}
+                        </span>
+                        <span className="roll-result-chaos">◈ {calcChaos(r)} chaos</span>
+                      </div>
+                    </div>
+                  );
+                })()}
               </section>
 
             </div>
@@ -254,7 +433,14 @@ export function CharacterSheet({ character, onEdit, onBack, onUpdateCharacter }:
                 anomaly={character.anomaly}
                 definition={anomalyDefinition}
                 onUpdateAnomaly={handleUpdateAnomaly}
-                burnout={character.additionalBurnout}
+                burnout={effectiveBurnout}
+                qualityAssurances={character.qualityAssurances}
+                onUpdateQA={handleUpdateQA}
+                onCommend={handleCommend}
+                unlockedDocs={anomalyDocs}
+                onGoto={handleEarnCode}
+                earnedCodes={earned}
+                onEarnCode={handleEarnCode}
               />
             )
             : (
@@ -272,6 +458,9 @@ export function CharacterSheet({ character, onEdit, onBack, onUpdateCharacter }:
                 reality={character.reality}
                 definition={realityDefinition}
                 onUpdateReality={handleUpdateReality}
+                unlockedDocs={realityDocs}
+                onGoto={handleEarnCode}
+                earnedCodes={earned}
               />
             )
             : (
@@ -287,6 +476,11 @@ export function CharacterSheet({ character, onEdit, onBack, onUpdateCharacter }:
             requisitions={character.requisitions ?? []}
             competencyName={competencyDefinition?.name ?? ''}
           />
+        )}
+
+        {/* Documents tab */}
+        {activeTab === 'documents' && (
+          <DocumentsPanel character={character} onGoto={handleEarnCode} onAcknowledgeA1={handleAcknowledgeA1} />
         )}
 
       </div>

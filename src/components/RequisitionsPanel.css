@@ -1,0 +1,156 @@
+/* ── Requisitions Panel ────────────────────────────────────────── */
+.requisitions-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.requisitions-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.requisitions-panel-title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-competency);
+  margin: 0;
+}
+
+.requisitions-empty {
+  color: var(--color-muted);
+  font-style: italic;
+  font-size: 0.875rem;
+}
+
+.requisitions-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.requisition-card {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--color-surface);
+}
+
+.requisition-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: #fde8e8;
+  border-bottom: 1px solid #f0b0b0;
+}
+
+.requisition-name {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--color-text);
+  flex: 1;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.requisition-divider {
+  width: 1px;
+  height: 1rem;
+  background: #f0b0b0;
+  flex-shrink: 0;
+}
+
+.requisition-page-code {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-competency);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.requisition-card-body {
+  padding: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.requisition-effect-label {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-competency);
+}
+
+.requisition-effect-text {
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--color-text);
+  white-space: pre-wrap;
+  margin: 0;
+}
+
+/* ── Requisitions Form ─────────────────────────────────────────── */
+.requisitions-form-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.requisitions-form-header h2 {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.requisitions-add-btn {
+  font-size: 0.8rem;
+  padding: 5px 12px;
+}
+
+.requisitions-empty-hint {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  font-style: italic;
+  margin-bottom: 0.5rem;
+}
+
+.requisition-form-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-competency);
+  border-radius: var(--radius);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.requisition-form-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.requisition-form-card-num {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--color-muted);
+}
+
+.requisition-remove-btn {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+}

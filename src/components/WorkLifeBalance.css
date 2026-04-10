@@ -1,0 +1,378 @@
+/* ── Work/Life Balance ────────────────────────────────────────── */
+.wlb-page {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.wlb-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.wlb-title {
+  font-size: 1.2rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text);
+}
+
+/* Award row (MVP / Probation / Neither) */
+.wlb-award-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.wlb-award {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.6rem 0.9rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+}
+.wlb-award--mvp       { border-color: var(--color-competency); }
+.wlb-award--probation { border-color: var(--color-anomaly); }
+.wlb-award--neither   { border-color: var(--color-reality); }
+
+.wlb-award-info { display: flex; flex-direction: column; }
+.wlb-award-label {
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.wlb-award--mvp       .wlb-award-label { color: var(--color-competency); }
+.wlb-award--probation .wlb-award-label { color: var(--color-anomaly); }
+.wlb-award--neither   .wlb-award-label { color: var(--color-reality); }
+.wlb-award-sub {
+  font-size: 0.72rem;
+  color: var(--color-muted);
+}
+.wlb-neither-btn { padding: 6px 12px; font-size: 0.8rem; }
+
+.wlb-rule-note {
+  font-size: 0.78rem;
+  color: var(--color-muted);
+  font-style: italic;
+  border-left: 3px solid var(--color-border);
+  padding-left: 0.75rem;
+}
+
+/* Tracks */
+.wlb-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.wlb-track {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wlb-track-label {
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 2px;
+}
+.wlb-track--competency .wlb-track-label { color: var(--color-competency); }
+.wlb-track--reality    .wlb-track-label { color: var(--color-reality); }
+.wlb-track--anomaly    .wlb-track-label { color: var(--color-anomaly); }
+
+/* Rank header row (Competency only) */
+.wlb-rank-row {
+  display: flex;
+}
+.wlb-rank-span {
+  flex: 1;
+  font-size: 0.52rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-competency);
+  text-align: center;
+  padding-bottom: 2px;
+  border-bottom: 1px solid var(--color-competency);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Box rows */
+.wlb-box-row {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* Arrows between boxes */
+.wlb-arrow {
+  flex: 0 0 auto;
+  font-size: 0.55rem;
+  line-height: 1;
+  opacity: 0.45;
+  padding: 0 1px;
+  pointer-events: none;
+  color: inherit;
+}
+
+/* Turn connector between top and bottom rows */
+.wlb-turn-connector {
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 0;
+  line-height: 1;
+}
+.wlb-turn-arrow {
+  font-size: 0.7rem;
+  color: inherit;
+  width: calc((100% / 15) * 0.9);
+  text-align: center;
+  display: block;
+}
+
+/* Individual box */
+.wlb-box {
+  flex: 1 1 0;
+  min-width: 0;
+  aspect-ratio: 1;
+  border: 2px solid;
+  border-radius: 3px;
+  cursor: default;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.5rem;
+  font-weight: 800;
+  padding: 0;
+  background: transparent;
+  transition: background 0.1s, opacity 0.1s;
+  line-height: 1;
+  overflow: hidden;
+}
+
+/* Border colors per track */
+.wlb-track--competency .wlb-box { border-color: var(--color-competency); color: var(--color-competency); }
+.wlb-track--reality    .wlb-box { border-color: var(--color-reality);    color: var(--color-reality); }
+.wlb-track--anomaly    .wlb-box { border-color: var(--color-anomaly);    color: var(--color-anomaly); }
+
+/* Clickable (next markable box) */
+.wlb-box--clickable { cursor: pointer; }
+.wlb-track--competency .wlb-box--clickable:hover { background: rgba(184,32,32,0.12); }
+.wlb-track--reality    .wlb-box--clickable:hover { background: rgba(200,154,0,0.12); }
+.wlb-track--anomaly    .wlb-box--clickable:hover { background: rgba(27,58,140,0.12); }
+
+/* Marked state */
+.wlb-track--competency .wlb-box--marked { background: var(--color-competency); color: #fff; }
+.wlb-track--reality    .wlb-box--marked { background: var(--color-reality);    color: #fff; }
+.wlb-track--anomaly    .wlb-box--marked { background: var(--color-anomaly);    color: #fff; }
+
+/* Struck state */
+.wlb-box--struck {
+  background: #e4e2de;
+  border-style: dashed;
+  opacity: 0.6;
+  cursor: default;
+}
+.wlb-box--struck::before,
+.wlb-box--struck::after {
+  content: '';
+  position: absolute;
+  width: 130%;
+  height: 2px;
+  background: currentColor;
+  top: 50%;
+  left: -15%;
+  transform-origin: center;
+  opacity: 0.6;
+}
+.wlb-box--struck::before { transform: translateY(-50%) rotate(45deg); }
+.wlb-box--struck::after  { transform: translateY(-50%) rotate(-45deg); }
+
+/* Earned codes section */
+.wlb-earned-codes {
+  border-top: 1px solid var(--color-border);
+  padding-top: 1rem;
+}
+.wlb-earned-codes-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted);
+  margin-bottom: 0.5rem;
+}
+.wlb-earned-codes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.wlb-earned-code {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  font-family: monospace;
+  color: var(--color-text);
+}
+
+/* ── WLB Reward Modal ─────────────────────────────────────────── */
+.wlb-reward-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.wlb-reward-modal {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border-radius: var(--radius);
+  padding: 1.75rem 2rem;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.wlb-reward-title {
+  font-size: 1rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.wlb-reward-title--competency { color: var(--color-competency); }
+.wlb-reward-title--reality    { color: var(--color-reality); }
+.wlb-reward-title--anomaly    { color: var(--color-anomaly); }
+
+.wlb-reward-subtitle {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  line-height: 1.4;
+}
+.wlb-reward-note {
+  font-size: 0.85rem;
+  color: var(--color-muted);
+  font-style: italic;
+}
+
+.wlb-reward-option-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: 260px;
+  overflow-y: auto;
+}
+.wlb-reward-option-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.45rem 0.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  cursor: pointer;
+  text-align: left;
+  font-size: 0.85rem;
+  transition: border-color 0.15s, background 0.15s;
+}
+.wlb-reward-option-btn:hover { background: #eceae4; }
+.wlb-reward-option-btn.selected {
+  border-color: var(--color-primary);
+  background: rgba(27,58,140,0.07);
+}
+.wlb-reward-option-btn:disabled { opacity: 0.4; cursor: default; }
+.wlb-reward-option-meta {
+  font-size: 0.75rem;
+  color: var(--color-muted);
+  font-weight: 600;
+  white-space: nowrap;
+  margin-left: 0.5rem;
+}
+
+/* Anomaly two-choice buttons */
+.wlb-reward-choice-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+.wlb-reward-choice-btn {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 0.6rem 0.75rem;
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.15s, background 0.15s;
+}
+.wlb-reward-choice-btn strong { font-size: 0.85rem; color: var(--color-anomaly); }
+.wlb-reward-choice-btn span   { font-size: 0.72rem; color: var(--color-muted); }
+.wlb-reward-choice-btn:hover  { background: #eceae4; }
+.wlb-reward-choice-btn.selected {
+  border-color: var(--color-anomaly);
+  background: rgba(27,58,140,0.07);
+}
+
+.wlb-reward-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+  border-top: 1px solid var(--color-border);
+}
+
+@media (max-width: 640px) {
+  .wlb-award-row { flex-direction: column; }
+
+  .wlb-track-scroll-area {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 4px;
+  }
+
+  .wlb-box-row,
+  .wlb-rank-row,
+  .wlb-turn-connector { min-width: max-content; }
+
+  .wlb-box {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    aspect-ratio: auto;
+    font-size: 0.6rem;
+  }
+
+  .wlb-rank-span {
+    flex: 0 0 44px;
+    font-size: 0.46rem;
+  }
+
+  .wlb-turn-arrow {
+    width: 44px;
+  }
+
+  .wlb-arrow { font-size: 0.5rem; padding: 0 1px; opacity: 0.5; }
+
+  .wlb-reward-modal { padding: 1.25rem 1rem; }
+  .wlb-reward-choice-row { grid-template-columns: 1fr; }
+}

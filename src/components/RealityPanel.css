@@ -1,0 +1,154 @@
+/* ── Reality Panel ────────────────────────────────────────────── */
+.reality-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-top: 1.5rem;
+}
+.reality-panel-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-reality);
+  margin: 0 0 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.reality-mechanics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+.reality-mechanic-block {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.reality-mechanic-block h3 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--color-reality);
+}
+.reality-mechanic-block p { margin: 0; font-size: 0.875rem; line-height: 1.5; }
+
+/* Reality track */
+.reality-track {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+.reality-track-box {
+  width: 28px;
+  height: 28px;
+  border: 2px solid var(--color-reality);
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.reality-track-box.filled { background: var(--color-reality); }
+.reality-track-box:hover { opacity: 0.75; }
+
+/* Relationship matrix */
+.relationship-matrix-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-reality);
+  margin: 0 0 0.75rem;
+}
+.relationship-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+.relationship-card {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.relationship-question-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-reality);
+  font-style: italic;
+  margin: 0;
+  line-height: 1.4;
+}
+.relationship-identity {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.relationship-name { font-weight: 700; font-size: 0.95rem; }
+.relationship-played-by { font-size: 0.75rem; color: var(--color-muted); }
+.relationship-description { font-size: 0.8rem; margin: 0; color: var(--color-muted); }
+.relationship-bonus { font-size: 0.8rem; margin: 0; }
+
+/* Connection track — circular pips */
+.connection-track {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+.connection-pip {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 2px solid var(--color-reality);
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.15s;
+  padding: 0;
+}
+.connection-pip.filled { background: var(--color-reality); }
+.connection-pip.networked {
+  border-style: dashed;
+}
+.connection-pip:hover { opacity: 0.7; }
+.connection-networked-label {
+  font-size: 0.65rem;
+  font-weight: 800;
+  color: var(--color-reality);
+  letter-spacing: 0.08em;
+}
+
+/* Relationship active badge */
+.relationship-active-badge {
+  align-self: flex-start;
+  padding: 0.2rem 0.6rem;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-top: auto;
+}
+.relationship-active-badge.activated {
+  background: #d4edda;
+  color: #155724;
+}
+.relationship-active-badge.inactive {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+/* Relationship form card */
+.relationship-form-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+.relationship-form-card h3 { margin: 0 0 0.75rem; font-size: 0.9rem; color: var(--color-reality); }

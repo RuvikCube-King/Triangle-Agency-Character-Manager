@@ -1,0 +1,168 @@
+/* ── Documents ──────────────────────────────────────────────────── */
+.documents-panel { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.documents-empty { color: var(--color-muted); font-style: italic; padding: 1rem 0; }
+
+.documents-track-group { display: flex; flex-direction: column; gap: 0.75rem; }
+
+.documents-track-label {
+  margin: 0 0 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.unlocked-docs-section { display: flex; flex-direction: column; gap: 0.75rem; margin-top: 1.5rem; }
+
+.unlocked-docs-heading {
+  margin: 0 0 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.document-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-left: 3px solid var(--color-border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.document-card.wlb-track--anomaly    { border-left-color: var(--color-anomaly); }
+.document-card.wlb-track--reality    { border-left-color: var(--color-reality); }
+.document-card.wlb-track--competency { border-left-color: var(--color-competency); }
+
+.document-card-header {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.document-code {
+  font-size: 0.7rem;
+  font-weight: 700;
+  font-family: monospace;
+  color: var(--color-muted);
+  flex-shrink: 0;
+}
+
+.document-title { margin: 0; font-size: 1rem; }
+
+.document-body {
+  padding: 0.9rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.doc-paragraphs p { margin: 0 0 0.35rem; font-size: 0.9rem; line-height: 1.5; }
+.doc-paragraphs p:last-child { margin-bottom: 0; }
+
+.doc-list { margin: 0; padding-left: 1.25rem; font-size: 0.9rem; line-height: 1.7; }
+
+.doc-ability { display: flex; flex-direction: column; gap: 0.5rem; }
+
+.doc-ability-roll { font-size: 0.8rem; color: var(--color-muted); }
+.doc-ability p { margin: 0; font-size: 0.9rem; }
+
+.doc-outcome {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  font-size: 0.875rem;
+  padding: 0.4rem 0.7rem;
+  border-left: 3px solid var(--color-border);
+}
+.doc-outcome--success { border-left-color: #2a7a2a; }
+.doc-outcome--tiered  { border-left-color: var(--color-reality); }
+.doc-outcome--failure { border-left-color: var(--color-competency); }
+
+.doc-outcome-label {
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.doc-outcome ul { margin: 0.2rem 0 0; padding-left: 1.1rem; }
+
+.doc-callout {
+  font-size: 0.9rem;
+  padding: 0.6rem 0.9rem;
+  border-radius: 4px;
+}
+.doc-callout--alert {
+  background: #1a1a1a;
+  color: #fff;
+  font-weight: 600;
+}
+.doc-callout--goto {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  font-family: monospace;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+.doc-callout--goto:hover:not(:disabled) { background: var(--color-border); }
+.doc-callout--earned { opacity: 0.5; cursor: default; }
+
+/* ── A1 Easter Egg ───────────────────────────────────── */
+.a1-easter-egg-btn {
+  margin-top: 0.75rem;
+  padding: 0.3rem 0.75rem;
+  font-family: monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  color: var(--color-muted);
+  cursor: pointer;
+}
+.a1-easter-egg-btn:hover { background: var(--color-border); }
+
+.a1-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.a1-modal {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  max-width: 380px;
+  width: 90%;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.a1-modal-header {
+  background: #c0392b;
+  color: #fff;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 0.9rem 1.1rem;
+}
+
+.a1-modal-body {
+  padding: 1rem 1.1rem;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.a1-modal-acknowledge {
+  margin: 0 1.1rem 1rem;
+  align-self: flex-end;
+}
