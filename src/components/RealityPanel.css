@@ -152,3 +152,33 @@
   margin-bottom: 1rem;
 }
 .relationship-form-card h3 { margin: 0 0 0.75rem; font-size: 0.9rem; color: var(--color-reality); }
+
+/* ── New Friends ──────────────────────────────────────────────── */
+.new-friends-section { margin-top: 1.5rem; }
+.new-friends-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+.new-friends-header .relationship-matrix-heading { margin-bottom: 0; }
+.new-friends-empty { color: var(--color-muted); font-style: italic; font-size: 0.875rem; }
+.new-friend-card { gap: 0.6rem; }
+.new-friend-fields { display: flex; flex-direction: column; gap: 0.4rem; }
+.new-friend-input {
+  width: 100%;
+  padding: 0.3rem 0.5rem;
+  font-size: 0.875rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-bg);
+  color: var(--color-text);
+  box-sizing: border-box;
+}
+.new-friend-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.new-friend-remove { font-size: 0.75rem; padding: 0.2rem 0.6rem; }

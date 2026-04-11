@@ -696,4 +696,106 @@ export const PLAYWALLED_DOCUMENTS: PlaywalledDocument[] = [
       },
     ],
   },
+  {
+    code: 'C2',
+    title: 'Captive Audience',
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'ability',
+        rollStat: 'presence',
+        tieredMode: 'per-one',
+        setup: 'When you talk, they have no choice but to listen. Start speaking to a target and roll Presence.',
+        outcomes: [
+          {
+            trigger: 'success',
+            triggerLabel: 'On a success,',
+            description: 'as long as you are speaking, the target cannot move, speak, or ignore you. If you or anyone comes into contact with them physically or Harms them in any way, the effect ends.',
+          },
+          {
+            trigger: 'tiered',
+            triggerLabel: 'For each additional 3,',
+            description: 'you may add a target to this effect who is also captivated while you are talking.',
+          },
+          {
+            trigger: 'triscendence',
+            triggerLabel: 'On Triscendence,',
+            description: 'you may issue a simple command to any targets affected by this ability (\u201csit down,\u201d \u201cwrite down your password,\u201d \u201cgive me the knife,\u201d etc.), and they will follow it to the best of their ability. In addition, you may pause up to thirty seconds between words or phrases while you are speaking without ending this effect.',
+          },
+          {
+            trigger: 'failure',
+            triggerLabel: 'On a failure,',
+            description: 'all within earshot are immune to your Whisper powers for the remainder of the mission.',
+          },
+        ],
+      },
+    ],
+  },
+  {
+    code: 'C3',
+    title: 'Careful Amalgam',
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'ability',
+        rollStat: 'subtlety',
+        tieredMode: 'per-one',
+        setup: 'Choose two of your Splices and imagine what they could be, together. Pick a body part for them to exit out of and roll Subtlety.',
+        outcomes: [
+          {
+            trigger: 'success',
+            triggerLabel: 'On a success,',
+            description: 'you lose them as Splices and release them as a combined Amalgam. The Amalgam follows your commands and thinks of itself as something like a child of yours. They cannot be returned to your body. The characteristics of the Amalgam must be within the range of, rather than the sum value of, the Splices.',
+          },
+          {
+            trigger: 'tiered',
+            triggerLabel: 'For each additional 3,',
+            description: 'you can add another Splice to the Amalgam.',
+          },
+          {
+            trigger: 'triscendence',
+            triggerLabel: 'On Triscendence,',
+            description: 'you do not lose the Splices as Splices when using this ability.',
+          },
+          {
+            trigger: 'failure',
+            triggerLabel: 'On a failure,',
+            description: 'you have failed to control the minds you\u2019ve kept held within you. Their urges, fears, and desires combine into an Anomaly Amalgam with a Focus and Domain unique to the combination of Splices you currently carry. It does not like you.',
+          },
+        ],
+      },
+      {
+        type: 'paragraphs',
+        text: [
+          'A human and a tiger Amalgam could have none, some, or all striped fur. An Amalgam of two humans could not be the combined height of two humans.',
+        ],
+      },
+    ],
+  },
+  {
+    code: 'C4',
+    title: 'New Friends',
+    track: 'reality',
+    sections: [
+      {
+        type: 'paragraphs',
+        text: [
+          'Understandable decision, Agent.',
+          'There comes a time in every Field Agent\u2019s career when they need to remind themselves what they\u2019re working for. You\u2019ve likely reached this point after your fifth or sixth successful mission, and with that in mind it\u2019s perfectly reasonable!',
+          'Our work is all about protecting Reality, so it can help to remember what Reality means to you. Most importantly, the people in your life can prove useful to your work. To that end, we\u2019ve developed a streamlined system for adding new Relationships, allowing the mechanics of the game to speed up and simplify an otherwise messy and complicated process.',
+          'We hope the knowledge that you can do this is satisfying on its own\u2014and we look forward to seeing you here again another five or six successful missions from now!',
+        ],
+      },
+      {
+        type: 'paragraphs',
+        text: [
+          'When spending time on your Reality, you can instead add your Connection to someone who isn\u2019t a Relationship, creating a New Friend.',
+          'First, nominate a person that you have interacted with on any previous mission to become a new Relationship for you. That person then decides whether or not they are willing to continue engaging with you as a friend, rival, romantic interest, responsibility, or something else. If they are, add them as a Relationship with one Connection. Assign them a Connection Bonus which will be available during your next Mission.',
+          'Most New Friends added this way will be under the GM\u2019s control when met, but when they become a Relationship, we recommend re-assigning control of this character to another player at the table.',
+          'If this person is unwilling or unavailable according to the GM or controlling player, you do not lose the Connection, and may choose to spend your time in a different way.',
+          'Your Network adds Connection normally when using this feature.',
+        ],
+      },
+    ],
+  },
 ];

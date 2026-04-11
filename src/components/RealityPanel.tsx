@@ -1,5 +1,5 @@
 import './RealityPanel.css';
-import { CharacterReality } from '../types/character';
+import { CharacterReality, Relationship } from '../types/character';
 import { RealityDefinition } from '../types/reality';
 import { PlaywalledDocument } from '../types/playwalleddocument';
 import { DocumentCard } from './DocumentCard';
@@ -43,6 +43,12 @@ export function RealityPanel({ reality, definition, onUpdateReality, unlockedDoc
     ] as [import('../types/character').Relationship, import('../types/character').Relationship, import('../types/character').Relationship];
     updated[relIndex] = { ...updated[relIndex], active: !updated[relIndex].active };
     onUpdateReality({ ...reality, relationships: updated });
+  }
+
+  function updateNewFriend(index: number, patch: Partial<Relationship>) {
+    const updated = [...(reality.additionalRelationships ?? [])];
+    updated[index] = { ...updated[index], ...patch };
+    onUpdateReality({ ...reality, additionalRelationships: updated });
   }
 
   return (
@@ -131,6 +137,104 @@ export function RealityPanel({ reality, definition, onUpdateReality, unlockedDoc
           </div>
         ))}
       </div>
+      {earnedCodes?.includes('C4') && (
+        <div className="new-friends-section">
+          <div className="new-friends-header">
+            <h3 className="relationship-matrix-heading">New Friends</h3>
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={() => {
+                const newFriend: Relationship = {
+                  name: '', playedBy: '', description: '',
+                  connection: 1, connectionBonus: '', active: false,
+                };
+                onUpdateReality({
+                  ...reality,
+                  additionalRelationships: [...(reality.additionalRelationships ?? []), newFriend],
+                });
+              }}
+            >
+              + Add New Friend
+            </button>
+          </div>
+
+          {(reality.additionalRelationships ?? []).length === 0 && (
+            <p className="new-friends-empty">No New Friends yet.</p>
+          )}
+
+          <div className="relationship-grid">
+            {(reality.additionalRelationships ?? []).map((rel, i) => (
+              <div key={i} className="relationship-card new-friend-card">
+                <div className="new-friend-fields">
+                  <input
+                    className="new-friend-input"
+                    placeholder="Name"
+                    value={rel.name}
+                    onChange={(e) => updateNewFriend(i, { name: e.target.value })}
+                  />
+                  <input
+                    className="new-friend-input"
+                    placeholder="Played by"
+                    value={rel.playedBy}
+                    onChange={(e) => updateNewFriend(i, { playedBy: e.target.value })}
+                  />
+                  <input
+                    className="new-friend-input"
+                    placeholder="Description"
+                    value={rel.description}
+                    onChange={(e) => updateNewFriend(i, { description: e.target.value })}
+                  />
+                  <input
+                    className="new-friend-input"
+                    placeholder="Connection Bonus"
+                    value={rel.connectionBonus}
+                    onChange={(e) => updateNewFriend(i, { connectionBonus: e.target.value })}
+                  />
+                </div>
+
+                <div className="connection-track">
+                  {Array.from({ length: 9 }, (_, pipIndex) => (
+                    <button
+                      key={pipIndex}
+                      className={`connection-pip ${pipIndex < rel.connection ? 'filled' : ''}`}
+                      onClick={() => {
+                        const newConn = pipIndex + 1 === rel.connection ? pipIndex : pipIndex + 1;
+                        updateNewFriend(i, { connection: newConn });
+                      }}
+                      aria-label={`Set connection to ${pipIndex + 1}`}
+                    />
+                  ))}
+                </div>
+                {rel.connection === 9 && (
+                  <span className="connection-networked-label">NETWORKED</span>
+                )}
+
+                <div className="new-friend-actions">
+                  <button
+                    className={`relationship-active-badge ${rel.active ? 'activated' : 'inactive'}`}
+                    onClick={() => updateNewFriend(i, { active: !rel.active })}
+                  >
+                    {rel.active ? 'Active' : 'Inactive'}
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn-danger new-friend-remove"
+                    onClick={() => {
+                      const updated = [...(reality.additionalRelationships ?? [])];
+                      updated.splice(i, 1);
+                      onUpdateReality({ ...reality, additionalRelationships: updated });
+                    }}
+                  >
+                    Remove
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {(unlockedDocs?.length ?? 0) > 0 && (
         <div className="unlocked-docs-section">
           <h4 className="unlocked-docs-heading">Unlocked Documents</h4>

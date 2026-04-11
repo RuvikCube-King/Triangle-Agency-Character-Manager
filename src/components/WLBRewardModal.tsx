@@ -82,6 +82,8 @@ function CompetencyReward({
 
 // ── Reality reward ───────────────────────────────────────────────
 
+type RelationshipSelection = { kind: 'base'; index: number } | { kind: 'friend'; index: number };
+
 function RealityReward({
   character,
   onApply,
@@ -91,29 +93,31 @@ function RealityReward({
   onApply: (updated: Character) => void;
   onCancel: () => void;
 }) {
-  const relationships = character.reality?.relationships ?? null;
-  const [selected, setSelected] = useState<number>(0);
+  const baseRelationships = character.reality?.relationships ?? null;
+  const newFriends = character.reality?.additionalRelationships ?? [];
+  const [selected, setSelected] = useState<RelationshipSelection>({ kind: 'base', index: 0 });
 
   function handleApply() {
-    if (!relationships || !character.reality) return;
+    if (!baseRelationships || !character.reality) return;
 
-    // Count currently Networked (connection === 9) relationships
-    const networkedCount = relationships.filter((r) => r.connection === 9).length;
+    const allRelationships = [...baseRelationships, ...newFriends];
+    const networkedCount = allRelationships.filter((r) => r.connection === 9).length;
     const totalGain = 1 + networkedCount;
 
-    const updatedRelationships = relationships.map((r, i) =>
-      i === selected
-        ? { ...r, connection: Math.min(9, r.connection + totalGain) }
-        : r
-    ) as typeof relationships;
-
-    onApply({
-      ...character,
-      reality: { ...character.reality, relationships: updatedRelationships },
-    });
+    if (selected.kind === 'base') {
+      const updatedRelationships = baseRelationships.map((r, i) =>
+        i === selected.index ? { ...r, connection: Math.min(9, r.connection + totalGain) } : r
+      ) as typeof baseRelationships;
+      onApply({ ...character, reality: { ...character.reality, relationships: updatedRelationships } });
+    } else {
+      const updatedFriends = newFriends.map((r, i) =>
+        i === selected.index ? { ...r, connection: Math.min(9, r.connection + totalGain) } : r
+      );
+      onApply({ ...character, reality: { ...character.reality, additionalRelationships: updatedFriends } });
+    }
   }
 
-  if (!relationships) {
+  if (!baseRelationships) {
     return (
       <>
         <p className="wlb-reward-title wlb-reward-title--reality">Reality Reward</p>
@@ -125,7 +129,10 @@ function RealityReward({
     );
   }
 
-  const networkedCount = relationships.filter((r) => r.connection === 9).length;
+  const allRelationships = [...baseRelationships, ...newFriends];
+  const networkedCount = allRelationships.filter((r) => r.connection === 9).length;
+  const isSelected = (sel: RelationshipSelection) =>
+    sel.kind === selected.kind && sel.index === selected.index;
 
   return (
     <>
@@ -136,14 +143,27 @@ function RealityReward({
       </p>
 
       <div className="wlb-reward-option-list">
-        {relationships.map((r, i) => (
+        {baseRelationships.map((r, i) => (
           <button
-            key={i}
+            key={`base-${i}`}
             type="button"
-            className={`wlb-reward-option-btn${selected === i ? ' selected' : ''}`}
-            onClick={() => setSelected(i)}
+            className={`wlb-reward-option-btn${isSelected({ kind: 'base', index: i }) ? ' selected' : ''}`}
+            onClick={() => setSelected({ kind: 'base', index: i })}
           >
             <span>{r.name || `Relationship ${i + 1}`}</span>
+            <span className="wlb-reward-option-meta">
+              {r.connection}/9{r.connection === 9 ? ' ★' : ''}
+            </span>
+          </button>
+        ))}
+        {newFriends.map((r, i) => (
+          <button
+            key={`friend-${i}`}
+            type="button"
+            className={`wlb-reward-option-btn${isSelected({ kind: 'friend', index: i }) ? ' selected' : ''}`}
+            onClick={() => setSelected({ kind: 'friend', index: i })}
+          >
+            <span>{r.name || `New Friend ${i + 1}`}</span>
             <span className="wlb-reward-option-meta">
               {r.connection}/9{r.connection === 9 ? ' ★' : ''}
             </span>

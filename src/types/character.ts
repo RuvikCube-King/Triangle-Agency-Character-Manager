@@ -75,6 +75,7 @@ export interface CharacterReality {
   burnoutRelease: { activated: boolean };
   realityTriggerBoxes: [boolean, boolean, boolean, boolean];
   relationships: [Relationship, Relationship, Relationship];
+  additionalRelationships?: Relationship[];   // added via C4 "New Friends"
 }
 
 export interface Character {
