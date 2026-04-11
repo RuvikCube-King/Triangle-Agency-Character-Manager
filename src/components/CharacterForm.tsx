@@ -88,6 +88,21 @@ export function CharacterForm({ character, onSave, onCancel }: Props) {
     setField('reality', { ...form.reality, relationships: updated });
   }
 
+  const selfAssessmentRequired =
+    !!selectedCompetencyDef &&
+    !!form.competency &&
+    !form.competency.selfAssessmentCompleted;
+
+  const validationErrors: string[] = [
+    ...(!form.name.trim() ? ['Character Name is required.'] : []),
+    ...(!form.anomaly ? ['Anomaly must be selected.'] : []),
+    ...(!form.reality ? ['Reality must be selected.'] : []),
+    ...(!form.competency ? ['Competency must be selected.'] : []),
+    ...(selfAssessmentRequired && selfAssessmentAnswers.some((a) => a === null)
+      ? ['All three Self-Assessment questions must be answered.']
+      : []),
+  ];
+
   function handleSave() {
     let savedForm = { ...form };
     if (savedForm.competency && !savedForm.competency.selfAssessmentCompleted && selectedCompetencyDef) {
@@ -117,13 +132,12 @@ export function CharacterForm({ character, onSave, onCancel }: Props) {
         <h1>{character.name ? `Edit: ${character.name}` : 'New Character'}</h1>
         <div className="form-header-actions">
           <button className="btn btn-secondary" onClick={onCancel}>Cancel</button>
-          {selectedCompetencyDef && form.competency && !form.competency.selfAssessmentCompleted &&
-            selfAssessmentAnswers.some((a) => a === null) && (
+          {validationErrors.length > 0 && (
             <span className="self-assessment-warning">
-              Answer all Self-Assessment questions to apply QA bonuses
+              {validationErrors[0]}
             </span>
           )}
-          <button className="btn btn-primary" onClick={handleSave}>Save</button>
+          <button className="btn btn-primary" onClick={handleSave} disabled={validationErrors.length > 0}>Save</button>
         </div>
       </div>
 
@@ -140,6 +154,7 @@ export function CharacterForm({ character, onSave, onCancel }: Props) {
                 value={form.name}
                 onChange={(e) => setField('name', e.target.value)}
               />
+              {!form.name.trim() && <span className="form-field-error">Required</span>}
             </label>
             <label>
               Pronouns
@@ -186,6 +201,7 @@ export function CharacterForm({ character, onSave, onCancel }: Props) {
                   <option key={def.id} value={def.id}>{def.name}</option>
                 ))}
               </select>
+              {!form.anomaly && <span className="form-field-error">Required</span>}
             </label>
             <label>
               Reality
@@ -201,6 +217,7 @@ export function CharacterForm({ character, onSave, onCancel }: Props) {
                   <option key={def.id} value={def.id}>{def.name}</option>
                 ))}
               </select>
+              {!form.reality && <span className="form-field-error">Required</span>}
             </label>
             <label>
               Competency
@@ -213,6 +230,7 @@ export function CharacterForm({ character, onSave, onCancel }: Props) {
                   <option key={def.id} value={def.id}>{def.name}</option>
                 ))}
               </select>
+              {!form.competency && <span className="form-field-error">Required</span>}
             </label>
           </div>
         </section>

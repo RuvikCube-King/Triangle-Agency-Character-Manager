@@ -465,4 +465,235 @@ export const PLAYWALLED_DOCUMENTS: PlaywalledDocument[] = [
       },
     ],
   },
+  {
+    code: "B6",
+    title: "Black Mirror",
+    track: "anomaly",
+    sections: [
+      {
+        type: 'ability',
+        tieredMode: 'per-extra',
+        rollStat: 'subtlety',
+        setup: 'Master the digital pathways. Push into a device’s screen or display and roll Subtlety.',
+        outcomes: [
+          {
+            trigger: 'success',
+            triggerLabel: 'On a success, ',
+            description: "you enter the device. While inside, you become a being of electricity and data; you may hide within the device, and you may see out of any screen or camera attached to it as if it were a window. In addition, you may emerge from the screen or display of any device directly connected to the original device (by cable, wireless pairing, etc.)",
+          },
+          {
+            trigger: 'tiered',
+            triggerLabel: 'For each additional 3, ',
+            description: 'choose one:',
+            options: [
+              "You may bring someone with you.",
+              "You may search the files, storage, or circuitry of the device you entered."
+            ],
+          },
+          {
+            trigger: 'failure',
+            triggerLabel: 'On a failure, ',
+            description: "only your consciousness goes. You are lost in the technology’s many connections and considered dead. This activates your Life Insurance Policy, but your newly data-based self might take on a life of its own.",
+          },
+        ],
+      },
+    ],
+  },
+  {
+    code: 'B7',
+    title: 'Bogeyman',
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'paragraphs',
+        text: [
+          "You linger forever in the minds of those you’ve haunted. You can now use Miss Me? targeting anyone or anything you’ve previously targeted with one of your Absence abilities, regardless of where either of you are before you roll. If you do, roll Attentiveness instead of Persistence.",
+          "If you fail a roll while using Bogeyman's effect, the target becomes immune to your Absence powers forever – and to your perception. They will always be a gap in your senses. You will never know they’re coming.",
+          "In addition, add the following text to Miss Me?:",
+        ],
+      },
+      {
+        type: 'outcome-addition',
+        targetAbilityName: 'Miss Me?',
+        outcome: {
+          trigger: 'triscendence',
+          triggerLabel: 'On Triscendence, ',
+          description: 'you never have to roll to use Miss Me? on this target again, with any number of 3s',
+        },
+        personalization: {
+          question: 'Which would I rather participate in?',
+          answers: [
+            { text: 'A wild party.', code: 'S17' },
+            { text: 'An intimate conversation.', code: 'B8' },
+          ],
+        },
+      },
+      {
+        type: 'ability',
+        rollStat: 'attentiveness',
+        setup: "You linger forever in the minds of those you’ve haunted. You can now use Miss Me? targeting anyone or anything you’ve previously targeted with one of your Absence abilities, regardless of where either of you are before you roll. If you do, roll Attentiveness instead of Persistence.",
+        outcomes: []
+      }
+    ],
+  },
+  {
+    code: 'B8',
+    title: 'Bounty',
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'paragraphs',
+        text: [
+          'If you know the name a target uses to think of themselves, you can use your Anomaly Abilities on them from anywhere.',
+        ],
+      },
+    ],
+  },
+  {
+    code: 'B9',
+    title: 'Bug',
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'ability',
+        rollStat: 'subtlety',
+        tieredMode: 'per-three',
+        setup: 'Accept a promise from someone and roll Subtlety.',
+        outcomes: [
+          {
+            trigger: 'success',
+            triggerLabel: 'On a success, ',
+            description: "you place a Bug: until the target has fulfilled the promise they made to you (or until they are no longer able to complete it) they are a perfect microphone. At any time, you can tune into their frequency to hear anything they’re saying or that is being said to them. You can have up to 3 instances of this effect active at a time.",
+          },
+          {
+            trigger: 'tiered',
+            triggerLabel: 'On every third 3, ',
+            description: "the Bug can be passed once. When the target speaks to someone, you can choose to move the Bug to them. This effect still ends when the initial target fulfills their promise or is no longer able to complete it."
+          },
+          {
+            trigger: 'failure',
+            triggerLabel: 'On a failure, ',
+            description: "you are Bugged by the target. They will hear your voice and those speaking to you in a way they cannot control for at least a day. At least one Loose End."
+          },
+        ],
+        personalization: {
+          question: 'I convince others to do what I want with...',
+          answers: [
+            { text: 'Dramatic ultimatums.', code: 'B5' },
+            { text: 'Subtle hints.', code: 'P9' },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    code: 'B10',
+    title: "But I Didn't Shoot...",
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'paragraphs',
+        text: [
+          "Targets under the effects of the consequences listed in Deputize…",
+        ],
+      },
+      {
+        type: 'list',
+        items: [
+          "Will never lose those effects unless you dismiss them.",
+          "Are immune to Harm. All Harm they would take is dealt to you instead, wherever you are.",
+          "Can signal you at any time by sharing one of their senses directly (allowing you to see with their eyes or hear with their ears, for example.) While experiencing a shared sense with a target, you may use Gun abilities as if you were in that target’s location.",
+        ],
+      },
+    ],
+  },
+  {
+    code: 'B11',
+    title: "But It's My Birthday!",
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'ability',
+        rollStat: 'empathy',
+        tieredMode: 'per-three',
+        setup: 'When a mundane target is upset, angry, or hostile toward you, tell them “It’s my birthday!” and roll Empathy.',
+        outcomes: [
+          {
+            trigger: 'success',
+            triggerLabel: 'On a success, ',
+            description: 'the target instantly relaxes and develops a neutral or mildly positive opinion toward you, regardless of their previous opinion. They don’t view you as a threat, or as a source of any kind of trouble…until tomorrow.',
+          },
+          {
+            trigger: 'tiered',
+            triggerLabel: 'On every third 3, ',
+            description: 'you can say “It’s their birthday, too!” and gesture at someone nearby. They are also discounted as a threat by the target.',
+          },
+          {
+            trigger: 'triscendence',
+            triggerLabel: 'On Triscendence, ',
+            description: 'it is everyone’s birthday. The target is unable to be hostile or aggressive toward anyone at all, anywhere.',
+          },
+          {
+            trigger: 'failure',
+            triggerLabel: 'On a failure, ',
+            description: 'the target is even more certain you’re a threat. Even worse, it is their birthday and they are extremely lucky. Harm or inconvenience directed towards them will tend to miss or fail to find purchase. Observers and passersby will go out of their way to assist them and intervene on their behalf. This effect lasts until the next day.',
+          },
+        ],
+        personalization: {
+          question: 'At my party...',
+          answers: [
+            { text: "Everyone's welcome.", code: 'L3' },
+            { text: "Presents are required.", code: 'G2' },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    code: 'C1',
+    title: 'Can I Try?',
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'ability',
+        rollStat: 'initiative',
+        tieredMode: 'per-three',
+        setup: 'Never hurts to ask. Approach somebody who is doing, or about to do, anything at all and ask, “Can I try?” Roll Initiative.',
+        outcomes: [
+          {
+            trigger: 'success',
+            triggerLabel: 'On a success, ',
+            description: " the person stops whatever they were doing, or were about to do, or are gatekeeping, to let you do it instead. (Sit on the bus, take the fire extinguisher, pull the lever deciding who lives or dies, etc.) They’re happy to step aside.",
+          },
+          {
+            trigger: 'tiered',
+            triggerLabel: 'On every third 3, ',
+            description: 'choose one:',
+            options: [
+              "An ally of yours can also participate or go before the target.",
+              "You can do another activity they would normally not let you do.",
+              "The target will teach you how to do the thing you are now doing.",
+            ],
+          },
+          {
+            trigger: 'triscendence',
+            triggerLabel: 'On Triscendence, ',
+            description: 'you can say “You try this!” and suggest any behavior for that person to try while you’re trying their thing. They will do it.',
+          },
+          {
+            trigger: 'failure',
+            triggerLabel: 'On a failure, ',
+            description: ' they do not allow you to try—and when you think about the activity you intended to do, you get so tired. Too tired to even consider doing that activity for the rest of the mission.'
+          },
+        ],
+        personalization: {
+          question: "If I can't have any...",
+          answers: [
+            { text: 'No one can.', code: 'T1' },
+            { text: 'You must be mistaken. I can have any.', code: 'I1' },
+          ],
+        },
+      },
+    ],
+  },
 ];
