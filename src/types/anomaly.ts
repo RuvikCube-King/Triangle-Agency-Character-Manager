@@ -2,7 +2,7 @@ import { QAKey } from './character';
 
 export interface PersonalizationAnswer {
   text: string;
-  code: string; // e.g. "D1", "R13"
+  code?: string; // e.g. "D1", "R13"
 }
 
 export interface PersonalizationPrompt {
@@ -24,10 +24,13 @@ export interface Outcome {
 export interface AbilityDefinition {
   name: string;
   description: string;  // flavor text + roll instruction
-  rollStat: QAKey;
-  outcomes: Outcome[];
+  rollStat?: QAKey;
+  outcomes?: Outcome[];
   personalization?: PersonalizationPrompt;
   tieredMode?: TieredMode;  // defaults to 'per-three' if absent
+  secondaryDescription?: string;
+  secondaryRollStat?: QAKey;
+  secondaryOutcomes?: Outcome[];
 }
 
 export interface AnomalyDefinition {

@@ -26,17 +26,29 @@ function Section({
     case 'ability':
       return (
         <div className="doc-section doc-ability">
-          <div className="doc-ability-roll">
-            Roll <strong>{section.rollStat.charAt(0).toUpperCase() + section.rollStat.slice(1)}</strong>
-          </div>
-          <p>{section.setup}</p>
-          {section.outcomes.map((o, i) => (
+          {section.rollStat && (
+            <div className="doc-ability-roll">
+              Roll <strong>{section.rollStat.charAt(0).toUpperCase() + section.rollStat.slice(1)}</strong>
+            </div>
+          )}
+          {section.setup && <p>{section.setup}</p>}
+          {section.outcomes?.map((o, i) => (
             <div key={i} className={`doc-outcome doc-outcome--${o.trigger}`}>
               <span className="doc-outcome-label">{o.triggerLabel}</span>
               <span>{o.description}</span>
               {o.options && <ul>{o.options.map((opt, j) => <li key={j}>{opt}</li>)}</ul>}
             </div>
           ))}
+          {section.personalization && (
+            <div className="doc-personalization">
+              <p className="doc-personalization-question">{section.personalization.question}</p>
+              <div className="doc-personalization-answers">
+                {section.personalization.answers.map((a, i) => (
+                  <span key={i} className="doc-personalization-answer">{a.text}</span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       );
     case 'outcome-addition':

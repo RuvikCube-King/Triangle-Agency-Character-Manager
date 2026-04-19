@@ -72,6 +72,8 @@ export function WorkLifeBalancePage({ character, anomalyDefinition, onUpdateChar
           description: abilitySection.setup,
           rollStat: abilitySection.rollStat,
           outcomes: abilitySection.outcomes,
+          personalization: abilitySection.personalization,
+          tieredMode: abilitySection.tieredMode,
         };
         const existing = baseCharacter.anomaly.additionalAbilities ?? [];
         if (!existing.some(a => a.name === newAbility.name)) {

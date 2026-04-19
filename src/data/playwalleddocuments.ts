@@ -860,7 +860,7 @@ export const PLAYWALLED_DOCUMENTS: PlaywalledDocument[] = [
             { text: 'The Lock.', code: 'TV' },
             { text: 'The Key.', code: 'F11' },
           ],
-        }
+        },
       },
     ],
   },
@@ -966,6 +966,93 @@ export const PLAYWALLED_DOCUMENTS: PlaywalledDocument[] = [
         variant: 'goto',
         gotoCode: 'R15',
       },
+    ],
+  },
+  {
+    code: 'C9',
+    title: 'Collateral Damage',
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'paragraphs',
+        text: [
+          "When an effect would Eliminate a target, that effect can instead Eliminate a sphere of space centered at the point of impact with a diameter measured in meters. The diameter is two meters per 3 rolled.",
+        ],
+      },
+      {
+        type: 'ability',
+        personalization: {
+          question: "Do you regret it?",
+          answers: [
+            {
+              text: "Yes",
+              code: "W2",
+            },
+            {
+              text: "No",
+            },
+          ],
+        },
+      },
+    ],
+  },
+  {
+    code: 'C10',
+    track: 'anomaly',
+    title: 'Cram Sessions',
+    sections: [
+      {
+        type: 'ability',
+        rollStat: 'dynamism',
+        setup: 'When you are attacked by an enemy, take the hit and roll Dynamism',
+        outcomes: [
+          {
+            trigger: 'success',
+            triggerLabel: 'On a success, ',
+            description: 'you create a space outside of time to study the attack completely, and train to counter it perfectly. Triple the amount of Harm dealt to you, but write down the way you were harmed. (Sword slashing, bolt of electricity, building falling on top of you, etc.)',
+          },
+          {
+            trigger: 'triscendence',
+            triggerLabel: 'On Triscendence, ',
+            description: 'your study reveals the target’s weaknesses. At any point, whenever you have physical access to the target enemy, you may prevent any Harm it would deal to you, and may deal a fatal amount of Harm to it with close to no effort.',
+          },
+          {
+            trigger: 'failure',
+            triggerLabel: 'On a failure, ',
+            description: 'time freezes for everyone except you and the one who Harmed you. You will both return to the normal flow of time only when one of you is dead or destroyed.',
+          },
+        ],
+        personalization: {
+          question: "When I'm falling behind, I...",
+          answers: [
+            { text: 'Make others wait for me.', code: 'R5' },
+            { text: 'Push myself to the limit.', code: 'P2' },
+          ],
+        },
+      },
+      // {
+      //   type: 'paragraphs',
+      //   text: [
+      //     "Any time you are Harmed in the exact same way as one you've written down, by anyone, activate this ability with the following adjusted text:",
+      //   ],
+      // },
+      // {
+      //   type: 'ability',
+      //   rollStat: 'dynamism',
+      //   setup: 'When someone tries it again, roll Dynamism.',
+      //   outcomes: [
+      //     {
+      //       trigger: 'success',
+      //       triggerLabel: 'On a success',
+      //       description: 'reduce the Harm by one for each 3 rolled. If this reduces Harm into the negative, you can turn their attack back at them and deal that much Harm in response.',
+      //     },
+      //     {
+      //       trigger: 'failure',
+      //       triggerLabel: 'On a failure, ',
+      //       description: 'time freezes for everyone except you and the one who Harmed you. You will both return to the normal flow of time only when one of you is dead or destroyed.'
+      //     },
+      //   ],
+      // },
     ],
   },
   {

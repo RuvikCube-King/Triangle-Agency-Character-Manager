@@ -115,6 +115,32 @@
 .doc-callout--goto:hover:not(:disabled) { background: var(--color-border); }
 .doc-callout--earned { opacity: 0.5; cursor: default; }
 
+/* ── Personalization ─────────────────────────────────── */
+.doc-personalization {
+  border-top: 1px solid var(--color-border);
+  padding-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.doc-personalization-question {
+  margin: 0;
+  font-size: 0.8rem;
+  font-style: italic;
+  color: var(--color-muted);
+}
+
+.doc-personalization-answers {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.doc-personalization-answer {
+  font-size: 0.875rem;
+}
+
 /* ── Locked Document ─────────────────────────────────── */
 .document-card--locked { opacity: 0.75; }
 
