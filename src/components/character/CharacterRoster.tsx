@@ -1,5 +1,5 @@
 import './CharacterRoster.css';
-import { Character } from '../types/character';
+import { Character } from '../../types/character';
 
 interface Props {
   characters: Character[];

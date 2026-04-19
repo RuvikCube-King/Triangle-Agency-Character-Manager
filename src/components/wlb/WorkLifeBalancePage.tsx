@@ -1,12 +1,12 @@
 import './WorkLifeBalance.css';
 import { useState } from 'react';
-import { Character, OutcomeAddition } from '../types/character';
-import { TrackName, BoxState } from '../types/workLifeBalance';
-import { AnomalyDefinition } from '../types/anomaly';
-import { TRACK_META } from '../data/workLifeBalance';
-import { PLAYWALLED_DOCUMENTS } from '../data/playwalleddocuments';
-import { AbilityDefinition } from '../types/anomaly';
-import { DocumentSection } from '../types/playwalleddocument';
+import { Character, OutcomeAddition } from '../../types/character';
+import { TrackName, BoxState } from '../../types/workLifeBalance';
+import { AnomalyDefinition } from '../../types/anomaly';
+import { TRACK_META } from '../../data/workLifeBalance';
+import { PLAYWALLED_DOCUMENTS } from '../../data/playwalleddocuments';
+import { AbilityDefinition } from '../../types/anomaly';
+import { DocumentSection } from '../../types/playwalleddocument';
 import { WLBTrack } from './WLBTrack';
 import { WLBRewardModal } from './WLBRewardModal';
 

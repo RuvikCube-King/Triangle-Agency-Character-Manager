@@ -1,9 +1,9 @@
 import './CharacterForm.css';
 import { useState } from 'react';
-import { Character, QA_KEYS, QAKey, createDefaultReality, Relationship, Requisition, createDefaultRequisition, createDefaultCompetency } from '../types/character';
-import { ANOMALY_DEFINITIONS } from '../data/anomalies';
-import { REALITY_DEFINITIONS } from '../data/realities';
-import { COMPETENCY_DEFINITIONS } from '../data/competencies';
+import { Character, QA_KEYS, QAKey, createDefaultReality, Relationship, Requisition, createDefaultRequisition, createDefaultCompetency } from '../../types/character';
+import { ANOMALY_DEFINITIONS } from '../../data/anomalies';
+import { REALITY_DEFINITIONS } from '../../data/realities';
+import { COMPETENCY_DEFINITIONS } from '../../data/competencies';
 
 interface Props {
   character: Character;

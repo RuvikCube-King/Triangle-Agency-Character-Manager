@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { useCharacters } from './hooks/useCharacters';
-import { CharacterRoster } from './components/CharacterRoster';
-import { CharacterSheet } from './components/CharacterSheet';
-import { CharacterForm } from './components/CharacterForm';
+import { CharacterRoster } from './components/character/CharacterRoster';
+import { CharacterSheet } from './components/character/CharacterSheet';
+import { CharacterForm } from './components/character/CharacterForm';
 import { Character } from './types/character';
 import './App.css';
 

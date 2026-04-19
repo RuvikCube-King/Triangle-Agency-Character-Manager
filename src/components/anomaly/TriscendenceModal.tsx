@@ -1,8 +1,8 @@
 import './TriscendenceModal.css';
 import { useState } from 'react';
-import { TieredMode } from '../types/anomaly';
-import { Character, QA_KEYS, QAKey } from '../types/character';
-import { DiceRollResult, calcTierResult } from '../utils/rollDice';
+import { TieredMode } from '../../types/anomaly';
+import { Character, QA_KEYS, QAKey } from '../../types/character';
+import { DiceRollResult, calcTierResult } from '../../utils/rollDice';
 
 interface Props {
   result: DiceRollResult;

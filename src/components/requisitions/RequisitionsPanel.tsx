@@ -1,5 +1,5 @@
 import './RequisitionsPanel.css';
-import { Requisition } from '../types/character';
+import { Requisition } from '../../types/character';
 
 interface Props {
   requisitions: Requisition[];

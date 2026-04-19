@@ -37,7 +37,7 @@ export const REALITY_BOX_META: TrackMeta = {
 };
 
 export const ANOMALY_BOX_META: TrackMeta = {
-   0: { code: 'C10' },
+   0: { code: 'H4' },
    1: { code: 'H3' },
    4: { code: 'U2' },
    6: { code: 'X2' },

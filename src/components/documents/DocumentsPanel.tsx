@@ -1,10 +1,10 @@
 import './Documents.css';
 import { useState } from 'react';
-import { Character } from '../types/character';
-import { PLAYWALLED_DOCUMENTS } from '../data/playwalleddocuments';
-import { getCodeTrack } from '../data/workLifeBalance';
+import { Character } from '../../types/character';
+import { PLAYWALLED_DOCUMENTS } from '../../data/playwalleddocuments';
+import { getCodeTrack } from '../../data/workLifeBalance';
 import { DocumentCard } from './DocumentCard';
-import { TrackName } from '../types/workLifeBalance';
+import { TrackName } from '../../types/workLifeBalance';
 
 interface Props {
   character: Character;

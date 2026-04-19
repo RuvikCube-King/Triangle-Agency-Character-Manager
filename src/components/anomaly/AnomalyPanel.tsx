@@ -1,12 +1,12 @@
 import './AnomalyPanel.css';
 import { useState } from 'react';
-import { AnomalyDefinition, TieredMode } from '../types/anomaly';
-import { AbilityProgress, AnswerCheckboxes, CharacterAnomaly, Character, OutcomeAddition } from '../types/character';
-import { DiceRollResult, rollDicePool, calcChaos } from '../utils/rollDice';
+import { AnomalyDefinition, TieredMode } from '../../types/anomaly';
+import { AbilityProgress, AnswerCheckboxes, CharacterAnomaly, Character, OutcomeAddition } from '../../types/character';
+import { DiceRollResult, rollDicePool, calcChaos } from '../../utils/rollDice';
 import { TriscendenceModal } from './TriscendenceModal';
 import { QASpendModal } from './QASpendModal';
-import { PlaywalledDocument } from '../types/playwalleddocument';
-import { DocumentCard } from './DocumentCard';
+import { PlaywalledDocument } from '../../types/playwalleddocument';
+import { DocumentCard } from '../documents/DocumentCard';
 
 interface Props {
   anomaly: CharacterAnomaly;

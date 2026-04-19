@@ -1,21 +1,21 @@
 import './CharacterSheet.css';
 import { useState } from 'react';
-import { Character, QA_KEYS, QAKey, CharacterAnomaly, CharacterReality, OutcomeAddition } from '../types/character';
-import { AbilityDefinition } from '../types/anomaly';
-import { DocumentSection } from '../types/playwalleddocument';
-import { rollDicePool, DiceRollResult, calcChaos } from '../utils/rollDice';
-import { TriscendenceModal } from './TriscendenceModal';
-import { ANOMALY_DEFINITIONS } from '../data/anomalies';
-import { REALITY_DEFINITIONS } from '../data/realities';
-import { COMPETENCY_DEFINITIONS } from '../data/competencies';
-import { AnomalyPanel } from './AnomalyPanel';
-import { RealityPanel } from './RealityPanel';
-import { RequisitionsPanel } from './RequisitionsPanel';
-import { WorkLifeBalancePage } from './WorkLifeBalancePage';
-import { PLAYWALLED_DOCUMENTS } from '../data/playwalleddocuments';
-import { getCodeTrack } from '../data/workLifeBalance';
-import { DocumentCard } from './DocumentCard';
-import { DocumentsPanel } from './DocumentsPanel';
+import { Character, QA_KEYS, QAKey, CharacterAnomaly, CharacterReality, OutcomeAddition } from '../../types/character';
+import { AbilityDefinition } from '../../types/anomaly';
+import { DocumentSection } from '../../types/playwalleddocument';
+import { rollDicePool, DiceRollResult, calcChaos } from '../../utils/rollDice';
+import { TriscendenceModal } from '../anomaly/TriscendenceModal';
+import { ANOMALY_DEFINITIONS } from '../../data/anomalies';
+import { REALITY_DEFINITIONS } from '../../data/realities';
+import { COMPETENCY_DEFINITIONS } from '../../data/competencies';
+import { AnomalyPanel } from '../anomaly/AnomalyPanel';
+import { RealityPanel } from '../reality/RealityPanel';
+import { RequisitionsPanel } from '../requisitions/RequisitionsPanel';
+import { WorkLifeBalancePage } from '../wlb/WorkLifeBalancePage';
+import { PLAYWALLED_DOCUMENTS } from '../../data/playwalleddocuments';
+import { getCodeTrack } from '../../data/workLifeBalance';
+import { DocumentCard } from '../documents/DocumentCard';
+import { DocumentsPanel } from '../documents/DocumentsPanel';
 
 type Tab = 'overview' | 'anomaly' | 'relationships' | 'requisitions' | 'documents';
 

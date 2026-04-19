@@ -1,8 +1,8 @@
 import './RealityPanel.css';
-import { CharacterReality, Relationship } from '../types/character';
-import { RealityDefinition } from '../types/reality';
-import { PlaywalledDocument } from '../types/playwalleddocument';
-import { DocumentCard } from './DocumentCard';
+import { CharacterReality, Relationship } from '../../types/character';
+import { RealityDefinition } from '../../types/reality';
+import { PlaywalledDocument } from '../../types/playwalleddocument';
+import { DocumentCard } from '../documents/DocumentCard';
 
 interface Props {
   reality: CharacterReality;
@@ -30,17 +30,17 @@ export function RealityPanel({ reality, definition, onUpdateReality, unlockedDoc
   function handleConnectionPip(relIndex: 0 | 1 | 2, pipIndex: number) {
     const current = reality.relationships[relIndex].connection;
     const newConnection = pipIndex + 1 === current ? pipIndex : pipIndex + 1;
-    const updated: [import('../types/character').Relationship, import('../types/character').Relationship, import('../types/character').Relationship] = [
+    const updated: [import('../../types/character').Relationship, import('../../types/character').Relationship, import('../../types/character').Relationship] = [
       ...reality.relationships,
-    ] as [import('../types/character').Relationship, import('../types/character').Relationship, import('../types/character').Relationship];
+    ] as [import('../../types/character').Relationship, import('../../types/character').Relationship, import('../../types/character').Relationship];
     updated[relIndex] = { ...updated[relIndex], connection: newConnection };
     onUpdateReality({ ...reality, relationships: updated });
   }
 
   function handleActiveToggle(relIndex: 0 | 1 | 2) {
-    const updated: [import('../types/character').Relationship, import('../types/character').Relationship, import('../types/character').Relationship] = [
+    const updated: [import('../../types/character').Relationship, import('../../types/character').Relationship, import('../../types/character').Relationship] = [
       ...reality.relationships,
-    ] as [import('../types/character').Relationship, import('../types/character').Relationship, import('../types/character').Relationship];
+    ] as [import('../../types/character').Relationship, import('../../types/character').Relationship, import('../../types/character').Relationship];
     updated[relIndex] = { ...updated[relIndex], active: !updated[relIndex].active };
     onUpdateReality({ ...reality, relationships: updated });
   }

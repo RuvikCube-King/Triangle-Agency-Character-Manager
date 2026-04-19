@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { Character, QA_KEYS, QAKey } from '../types/character';
-import { TrackName } from '../types/workLifeBalance';
-import { AnomalyDefinition } from '../types/anomaly';
+import { Character, QA_KEYS, QAKey } from '../../types/character';
+import { TrackName } from '../../types/workLifeBalance';
+import { AnomalyDefinition } from '../../types/anomaly';
 
 interface Props {
   rewardType: TrackName;

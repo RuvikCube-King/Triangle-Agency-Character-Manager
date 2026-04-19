@@ -1,10 +1,10 @@
 import React from 'react';
-import { BoxState, TrackName, WLBTrackState } from '../types/workLifeBalance';
+import { BoxState, TrackName, WLBTrackState } from '../../types/workLifeBalance';
 import {
   TrackMeta,
   COMPETENCY_TOP_RANKS,
   COMPETENCY_BOTTOM_RANKS,
-} from '../data/workLifeBalance';
+} from '../../data/workLifeBalance';
 
 interface Props {
   trackName: TrackName;

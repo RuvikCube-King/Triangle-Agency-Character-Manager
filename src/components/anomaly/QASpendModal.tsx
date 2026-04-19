@@ -1,8 +1,8 @@
 import './QASpendModal.css';
 import { useState } from 'react';
-import { TieredMode } from '../types/anomaly';
-import { QAKey, QualityAssurance } from '../types/character';
-import { DiceRollResult, calcTierResult } from '../utils/rollDice';
+import { TieredMode } from '../../types/anomaly';
+import { QAKey, QualityAssurance } from '../../types/character';
+import { DiceRollResult, calcTierResult } from '../../utils/rollDice';
 
 interface Props {
   abilityName: string;

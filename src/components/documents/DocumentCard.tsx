@@ -1,5 +1,5 @@
-import { PlaywalledDocument, DocumentSection } from '../types/playwalleddocument';
-import { PLAYWALLED_DOCUMENTS } from '../data/playwalleddocuments';
+import { PlaywalledDocument, DocumentSection } from '../../types/playwalleddocument';
+import { PLAYWALLED_DOCUMENTS } from '../../data/playwalleddocuments';
 
 function Section({
   section,
