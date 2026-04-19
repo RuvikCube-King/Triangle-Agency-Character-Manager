@@ -798,4 +798,189 @@ export const PLAYWALLED_DOCUMENTS: PlaywalledDocument[] = [
       },
     ],
   },
+  {
+    code: 'C5',
+    title: 'Catchphrase',
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'paragraphs',
+        text: [
+          'At any time during the beginning of each mission, before the end of the briefing, secretly write up to six different three-word phrases somewhere. (“So I said,” “my aardvark laughs,” “until the final,” etc.) None of the phrases may share any words, and they should be kept hidden in a publicly visible place so they cannot be changed after the briefing.',
+          'At any point during this mission’s investigation, if your GM or another player says one of these phrases verbatim, show that phrase to the group.',
+          'After you do, your next roll automatically achieves Triscendence. Once a phrase is used in this way, it cannot ever be reused again with this ability.',
+          'If you share hints or details about your selections before they are revealed, accidentally or otherwise, you can no longer gain this effect during this mission. Immediately reveal all selected phrases to your group. Each time any other player says any of the phrases, add 10 Chaos to the Chaos Pool.'
+        ],
+      },
+    ],
+  },
+  {
+    code: 'C6',
+    title: 'Chalk Outline',
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'ability',
+        rollStat: 'attentiveness',
+        tieredMode: 'per-three',
+        setup: 'You can designate a space you’re in and leave a lasting impression. Splay yourself out on the ground and roll Attentiveness.',
+        outcomes: [
+          {
+            trigger: 'success',
+            triggerLabel: 'On a success,',
+            description: 'for the remainder of the current mission, anyone who enters, crosses, or otherwise interacts with this space will receive a powerful intuition. Select one of the following impressions:',
+            options: [
+              'The identity of a person of interest',
+              'The sensation of being in a specific place (that you have previously experienced)',
+              'Your current emotional state (when using this ability)',
+              'A three word imperative',
+              'What you did in this space',
+              'A famousquote (of any length)'
+            ],
+          },
+          {
+            trigger: 'tiered',
+            triggerLabel: 'On every third 3, ',
+            description: 'you may select an additional impression.',
+          },
+          {
+            trigger: 'triscendence',
+            triggerLabel: 'On Triscendence, ',
+            description: 'your presence lingers in the space forever: anyone who ever passes through will receive your impression.',
+          },
+          {
+            trigger: 'failure',
+            triggerLabel: 'On a failure,',
+            description: 'anyone who interacts with this space will receive a powerful intuition regarding your identity and Anomalous nature. They’ll consider you dangerous, untrustworthy, and inhuman if they encounter you in the future.',
+          },
+        ],
+        personalization: {
+          question: "If I had to choose, I'd take...",
+          answers: [
+            { text: 'The Lock.', code: 'TV' },
+            { text: 'The Key.', code: 'F11' },
+          ],
+        }
+      },
+    ],
+  },
+  {
+    code: 'C7',
+    title: 'Changeling',
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'ability',
+        rollStat: 'duplicity',
+        tieredMode: 'six-plus',
+        setup: 'They were barely using their life anyway. Push a mundane target across a threshold and roll Duplicity.',
+        outcomes: [
+          {
+            trigger: 'success',
+            triggerLabel: 'On a success,',
+            description: 'the target is sent Elsewhere. You receive the ability to transform into that person at any time and make use of their appearance and physical attributes.',
+          },
+          {
+            trigger: 'tiered',
+            triggerLabel: 'On six or more 3s, ',
+            description: ' this target’s attributes are available to you as separate pieces. When you use this ability in the future to transform into another target, you may also add parts of this target’s physical attributes, becoming an amalgam of the two targets according to your specifications.',
+          },
+          {
+            trigger: 'triscendence',
+            triggerLabel: 'On Triscendence, ',
+            description: 'your presence lingers in the space forever: anyone who ever passes through will receive your impression.',
+          },
+          {
+            trigger: 'failure',
+            triggerLabel: 'On a failure, ',
+            description: 'the target can never return. The version of them you can transform into has something unsettlingly off about it.',
+          },
+        ],
+      },
+      {
+        type: 'ability',
+        rollStat: 'duplicity',
+        tieredMode: 'six-plus',
+        setup: 'If you would like to return a target after a success, roll Duplicity.',
+        outcomes: [
+          {
+            trigger: 'success',
+            triggerLabel: 'On a success,',
+            description: ' they return to exactly where you took them, and you lose the ability to transform into them. They have aged. They have been Elsewhere. You have no control over where that was.',
+          },
+          {
+            trigger: 'tiered',
+            triggerLabel: 'On six or more 3s, ',
+            description: 'you have complete control over where that was.',
+          },
+          {
+            trigger: 'failure',
+            triggerLabel: 'On a failure, ',
+            description: 'something else returns from Elsewhere instead.',
+          },
+        ],
+      }
+    ],
+  },
+  {
+    code: 'C8',
+    title: 'Clock Face',
+    track: 'anomaly',
+    sections: [
+      {
+        type: 'ability',
+        rollStat: 'persistence',
+        setup: 'You create and can now wield a powerful artifact: Clock Face. Clock Face is a large, circular shield that can be comfortably strapped to an appendage. When using Clock Face to defend against something that would harm or hurt you or an ally, roll Persistence.',
+        outcomes: [
+          {
+            trigger: 'success',
+            triggerLabel: 'On a success, ',
+            description: 'the attack reflects back upon the attacker, and its original target is unharmed.',
+          },
+          {
+            trigger: 'tiered',
+            triggerLabel: 'On every third 3, ',
+            description: 'You may choose one of the following:',
+            options:[
+              "Writers Block: It becomes 3am, and the attacker loses track of whatever plan they  had that led to the attack in the first place.",
+              "Morning Brew: It becomes 7:45am, and any number of nearby targets you choose are filled with energy and focus, becoming able to execute complex, coordinated maneuvers with relatively little practice.",
+              "High Noon: It becomes 12pm. Anyone nearby who isn’t you or the attacker pauses to watch the two of you duel until one emerges victorious.",
+              "Five O’Clock Here: It becomes 5pm. Your attacker is hit with a wave of lethargy and calm. Even if they are still motivated to fight, the lethargy weakens and slows them.",
+            ],
+          },
+          {
+            trigger: 'triscendence',
+            triggerLabel: 'On Triscendence, ',
+            description: 'you take time from the target: they age by one year, and you become one year younger.',
+          },
+          {
+            trigger: 'failure',
+            triggerLabel: 'On a failure, ',
+            description: "you fail to stop the attack. Instead of receiving the normal effects of this Harm, you cease to exist for one hour per Harm dealt by the attack. When you return, you're in the same spot",
+          },
+        ],
+      },
+      {
+        type: 'callout',
+        text: '[GO TO: R15]',
+        variant: 'goto',
+        gotoCode: 'R15',
+      },
+    ],
+  },
+  {
+    code: 'R15',
+    title: '[Placeholder Title]',
+    track: 'anomaly',
+    unlockCondition: {
+      type: 'requires-documents',
+      documentCodes: ['B4', 'L5', 'C8'],
+    },
+    sections: [
+      {
+        type: 'paragraphs',
+        text: ['[Placeholder content — to be filled in.]'],
+      },
+    ],
+  },
 ];

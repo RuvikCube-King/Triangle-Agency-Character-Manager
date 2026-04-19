@@ -1,4 +1,5 @@
 import { PlaywalledDocument, DocumentSection } from '../types/playwalleddocument';
+import { PLAYWALLED_DOCUMENTS } from '../data/playwalleddocuments';
 
 function Section({
   section,
@@ -85,17 +86,42 @@ interface Props {
 }
 
 export function DocumentCard({ doc, trackClass, earnedCodes, onGoto }: Props) {
+  const { unlockCondition } = doc;
+  const isLocked =
+    unlockCondition?.type === 'requires-documents' &&
+    !unlockCondition.documentCodes.every(code => earnedCodes.includes(code));
+
   return (
-    <div className={`document-card${trackClass ? ` ${trackClass}` : ''}`}>
+    <div className={`document-card${isLocked ? ' document-card--locked' : ''}${trackClass ? ` ${trackClass}` : ''}`}>
       <div className="document-card-header">
         <span className="document-code">{doc.code}</span>
         <h3 className="document-title">{doc.title}</h3>
+        {isLocked && <span className="document-lock-badge">Locked</span>}
       </div>
-      <div className="document-body">
-        {doc.sections.map((s, i) => (
-          <Section key={i} section={s} onGoto={onGoto} earnedCodes={earnedCodes} />
-        ))}
-      </div>
+      {isLocked && unlockCondition?.type === 'requires-documents' ? (
+        <div className="document-prerequisites">
+          <p className="document-prerequisites-label">Requires</p>
+          <ul className="document-prerequisites-list">
+            {unlockCondition.documentCodes.map(code => {
+              const met = earnedCodes.includes(code);
+              const title = PLAYWALLED_DOCUMENTS.find(d => d.code === code)?.title;
+              return (
+                <li key={code} className={`document-prerequisite document-prerequisite--${met ? 'met' : 'unmet'}`}>
+                  <span className="document-prerequisite-check">{met ? '✓' : '✗'}</span>
+                  <span className="document-prerequisite-code">{code}</span>
+                  {title && <span className="document-prerequisite-title">{title}</span>}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ) : (
+        <div className="document-body">
+          {doc.sections.map((s, i) => (
+            <Section key={i} section={s} onGoto={onGoto} earnedCodes={earnedCodes} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
