@@ -37,3 +37,5 @@
 .roster-item-name { font-size: 1.1rem; font-weight: 700; }
 .roster-item-title { font-size: 0.85rem; color: var(--color-muted); }
 .roster-item-actions { display: flex; gap: 0.5rem; }
+
+.roster-header-actions { display: flex; gap: 0.5rem; align-items: center; }

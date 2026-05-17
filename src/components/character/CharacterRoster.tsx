@@ -1,4 +1,5 @@
 import './CharacterRoster.css';
+import { useRef } from 'react';
 import { Character } from '../../types/character';
 
 interface Props {
@@ -7,16 +8,58 @@ interface Props {
   onEdit: (id: string) => void;
   onDelete: (id: string) => void;
   onCreateNew: () => void;
+  onImport: (data: unknown) => boolean;
 }
 
-export function CharacterRoster({ characters, onView, onEdit, onDelete, onCreateNew }: Props) {
+function exportCharacter(char: Character) {
+  const blob = new Blob([JSON.stringify(char, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${char.name || 'character'}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+export function CharacterRoster({ characters, onView, onEdit, onDelete, onCreateNew, onImport }: Props) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      try {
+        const data = JSON.parse(ev.target?.result as string);
+        const ok = onImport(data);
+        if (!ok) alert('Invalid character file.');
+      } catch {
+        alert('Could not read file.');
+      }
+      e.target.value = '';
+    };
+    reader.readAsText(file);
+  }
+
   return (
     <div className="roster">
       <div className="roster-header">
         <h1>Triangle Agency</h1>
-        <button className="btn btn-primary" onClick={onCreateNew}>
-          + New Character
-        </button>
+        <div className="roster-header-actions">
+          <button className="btn btn-secondary" onClick={() => fileInputRef.current?.click()}>
+            Import
+          </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept=".json,application/json"
+            style={{ display: 'none' }}
+            onChange={handleFileChange}
+          />
+          <button className="btn btn-primary" onClick={onCreateNew}>
+            + New Character
+          </button>
+        </div>
       </div>
 
       {characters.length === 0 ? (
@@ -41,6 +84,9 @@ export function CharacterRoster({ characters, onView, onEdit, onDelete, onCreate
                 </button>
                 <button className="btn btn-secondary" onClick={() => onEdit(char.id)}>
                   Edit
+                </button>
+                <button className="btn btn-secondary" onClick={() => exportCharacter(char)}>
+                  Export
                 </button>
                 <button
                   className="btn btn-danger"

@@ -55,5 +55,17 @@ export function useCharacters() {
     setCharacters((prev) => prev.filter((c) => c.id !== id));
   }
 
-  return { characters, addCharacter, updateCharacter, deleteCharacter };
+  function importCharacter(data: unknown): boolean {
+    try {
+      if (typeof data !== 'object' || data === null) return false;
+      const migrated = migrateCharacter(data);
+      const withNewId: Character = { ...migrated, id: crypto.randomUUID() };
+      setCharacters((prev) => [...prev, withNewId]);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  return { characters, addCharacter, updateCharacter, deleteCharacter, importCharacter };
 }

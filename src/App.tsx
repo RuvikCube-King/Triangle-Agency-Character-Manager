@@ -9,7 +9,7 @@ import './App.css';
 type View = 'roster' | 'sheet' | 'edit';
 
 export function App() {
-  const { characters, addCharacter, updateCharacter, deleteCharacter } = useCharacters();
+  const { characters, addCharacter, updateCharacter, deleteCharacter, importCharacter } = useCharacters();
   const [view, setView] = useState<View>('roster');
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -58,6 +58,7 @@ export function App() {
           onEdit={handleEdit}
           onDelete={handleDelete}
           onCreateNew={handleCreateNew}
+          onImport={importCharacter}
         />
       )}
       {view === 'sheet' && selectedCharacter && (
